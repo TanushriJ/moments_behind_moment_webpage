@@ -1,0 +1,1357 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description"
+        content="Moments Behind Money helps you understand the life behind your spending, without spreadsheets, guilt, or giving up control of your data." />
+    <meta name="theme-color" content="#f7f3ea" />
+
+    <title>Moments Behind Money</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=DM+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet" />
+
+    <style>
+        :root {
+            --background: #f7f3ea;
+            --paper: #fffdf8;
+            --ink: #24221d;
+            --muted: #6e695f;
+            --line: #ddd3c5;
+            --green: #315f3d;
+            --green-light: #e7f0e6;
+            --green-mid: #78a879;
+            --rust: #bf6743;
+            --dark: #1d1d18;
+            --shadow: 0 24px 70px rgba(36, 34, 29, 0.09);
+            --radius-lg: 28px;
+            --radius-md: 20px;
+            --page-width: 1160px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            overflow-x: hidden;
+            background:
+                radial-gradient(circle at 5% 0%, rgba(191, 103, 67, 0.08), transparent 28rem),
+                radial-gradient(circle at 95% 8%, rgba(49, 95, 61, 0.08), transparent 26rem),
+                var(--background);
+            color: var(--ink);
+            font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        img,
+        svg {
+            max-width: 100%;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        a {
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .container {
+            width: min(calc(100% - 36px), var(--page-width));
+            margin-inline: auto;
+        }
+
+        .section {
+            padding: 88px 0;
+        }
+
+        .eyebrow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 0 16px;
+            color: var(--green);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.19em;
+            text-transform: uppercase;
+        }
+
+        .eyebrow::before {
+            width: 28px;
+            height: 1px;
+            background: currentColor;
+            content: "";
+        }
+
+        h1,
+        h2,
+        h3 {
+            margin: 0;
+            font-family: "Lora", Georgia, serif;
+            font-weight: 500;
+            letter-spacing: -0.04em;
+        }
+
+        h1 {
+            max-width: 850px;
+            font-size: clamp(3rem, 8vw, 6.3rem);
+            line-height: 1.01;
+        }
+
+        h2 {
+            max-width: 760px;
+            font-size: clamp(2.25rem, 5vw, 4.7rem);
+            line-height: 1.06;
+        }
+
+        h3 {
+            font-size: 1.45rem;
+            line-height: 1.2;
+        }
+
+        em {
+            color: var(--green);
+            font-weight: 500;
+        }
+
+        p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 50px;
+            align-items: center;
+            justify-content: center;
+            padding: 13px 23px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: var(--green);
+            color: white;
+            font-size: 0.88rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            background: #274e32;
+            box-shadow: 0 14px 30px rgba(49, 95, 61, 0.18);
+        }
+
+        .button.secondary {
+            border-color: var(--line);
+            background: rgba(255, 253, 248, 0.72);
+            color: var(--ink);
+        }
+
+        .button.secondary:hover {
+            background: white;
+            box-shadow: none;
+        }
+
+        .topbar {
+            position: sticky;
+            z-index: 20;
+            top: 0;
+            border-bottom: 1px solid rgba(221, 211, 197, 0.7);
+            background: rgba(247, 243, 234, 0.88);
+            backdrop-filter: blur(16px);
+        }
+
+        .topbar-inner {
+            display: flex;
+            min-height: 68px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            font-family: "Lora", Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            letter-spacing: -0.03em;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: var(--green);
+            font-style: italic;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+
+        .nav-links>a:not(.button) {
+            color: var(--muted);
+            font-size: 0.87rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .nav-links>a:not(.button):hover {
+            color: var(--ink);
+        }
+
+        .hero {
+            display: grid;
+            min-height: calc(100svh - 68px);
+            align-items: center;
+            padding: 72px 0 82px;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
+            align-items: center;
+            gap: 68px;
+        }
+
+        .hero-copy p {
+            max-width: 630px;
+            margin-top: 25px;
+            font-size: clamp(1.06rem, 2vw, 1.25rem);
+            line-height: 1.7;
+        }
+
+        .hero-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: 30px;
+        }
+
+        .hero-note {
+            margin-top: 16px;
+            color: #8a8378;
+            font-size: 0.8rem;
+        }
+
+        .product-card {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: linear-gradient(180deg, #fffdf8, #eee6d9);
+            box-shadow: var(--shadow);
+        }
+
+        .chart-card {
+            padding: 22px;
+        }
+
+        .chart-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 16px;
+            margin-bottom: 18px;
+        }
+
+        .micro-label {
+            color: #7b7469;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+            margin-top: 7px;
+            color: #756f64;
+            font-size: 0.7rem;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin-right: 5px;
+            border-radius: 50%;
+        }
+
+        .income-dot {
+            background: #6a9b52;
+        }
+
+        .spending-dot {
+            background: var(--rust);
+        }
+
+        .toggle {
+            display: inline-flex;
+            flex: 0 0 auto;
+            padding: 4px;
+            border: 1px solid rgba(49, 95, 61, 0.22);
+            border-radius: 999px;
+            background: white;
+        }
+
+        .toggle span {
+            padding: 6px 10px;
+            color: #777064;
+            font-size: 0.65rem;
+        }
+
+        .toggle .active {
+            border-radius: 999px;
+            background: var(--green-light);
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .chart-wrap {
+            overflow-x: auto;
+            padding-bottom: 4px;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .chart-wrap svg {
+            display: block;
+            width: 100%;
+            min-width: 570px;
+        }
+
+        .story-note {
+            margin-top: 16px;
+            padding: 15px 17px;
+            border: 1px solid rgba(49, 95, 61, 0.16);
+            border-radius: 15px;
+            background: rgba(49, 95, 61, 0.08);
+            color: #686257;
+            font-size: 0.88rem;
+        }
+
+        .story-note strong {
+            color: var(--green);
+        }
+
+        .scroll-hint {
+            display: none;
+            margin-top: 8px;
+            color: #877f73;
+            font-size: 0.72rem;
+            text-align: center;
+        }
+
+        .section-heading {
+            display: grid;
+            grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.55fr);
+            align-items: end;
+            gap: 50px;
+            margin-bottom: 45px;
+        }
+
+        .section-heading p {
+            max-width: 500px;
+            padding-bottom: 5px;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+
+        .step {
+            min-height: 250px;
+            padding: 26px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-md);
+            background: rgba(255, 253, 248, 0.72);
+        }
+
+        .step-number {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            margin-bottom: 54px;
+            border: 1px solid rgba(49, 95, 61, 0.22);
+            border-radius: 50%;
+            background: var(--green-light);
+            color: var(--green);
+            font-family: "Lora", serif;
+            font-size: 1.05rem;
+        }
+
+        .step p {
+            margin-top: 10px;
+            font-size: 0.93rem;
+        }
+
+        .story-section {
+            background: var(--dark);
+            color: #fffdf8;
+        }
+
+        .story-section .eyebrow {
+            color: #9bc59a;
+        }
+
+        .story-section h2 {
+            color: #fffdf8;
+        }
+
+        .story-section em {
+            color: #9bc59a;
+        }
+
+        .story-section p {
+            color: rgba(255, 253, 248, 0.66);
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
+            align-items: center;
+            gap: 66px;
+        }
+
+        .story-demo {
+            padding: 28px;
+            border: 1px solid rgba(255, 253, 248, 0.12);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 253, 248, 0.05);
+        }
+
+        .story-demo-header {
+            margin-bottom: 18px;
+        }
+
+        .story-demo-header small {
+            display: block;
+            margin-bottom: 5px;
+            color: rgba(255, 253, 248, 0.42);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .story-demo-header h3 {
+            color: white;
+            font-size: 1.7rem;
+        }
+
+        .transaction-line {
+            padding: 17px;
+            border-left: 2px solid #9bc59a;
+            border-radius: 0 14px 14px 0;
+            background: rgba(255, 253, 248, 0.055);
+            color: rgba(255, 253, 248, 0.76);
+            font-size: 0.94rem;
+        }
+
+        .memory-prompt {
+            margin-top: 15px;
+            color: rgba(255, 253, 248, 0.54);
+            font-family: "Lora", serif;
+            font-size: 0.91rem;
+            font-style: italic;
+        }
+
+        .memory-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .memory-input div {
+            flex: 1;
+            min-height: 50px;
+            padding: 13px 15px;
+            border: 1px solid rgba(255, 253, 248, 0.14);
+            border-radius: 12px;
+            background: rgba(255, 253, 248, 0.08);
+            color: #fffdf8;
+            font-family: "Lora", serif;
+            font-size: 0.98rem;
+        }
+
+        .saved {
+            flex: 0 0 auto;
+            padding: 13px 15px;
+            border-radius: 11px;
+            background: #9bc59a;
+            color: #172017;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+
+        .quote {
+            max-width: 510px;
+            margin-top: 24px;
+            color: rgba(255, 253, 248, 0.72);
+            font-family: "Lora", serif;
+            font-size: 1.22rem;
+            font-style: italic;
+            line-height: 1.55;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+            margin-top: 34px;
+        }
+
+        .feature {
+            padding: 22px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255, 253, 248, 0.72);
+        }
+
+        .feature-icon {
+            display: grid;
+            width: 42px;
+            height: 42px;
+            place-items: center;
+            margin-bottom: 30px;
+            border: 1px solid rgba(49, 95, 61, 0.2);
+            border-radius: 50%;
+            background: var(--green-light);
+            color: var(--green);
+            font-size: 1.1rem;
+        }
+
+        .feature p {
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .chat-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
+            align-items: center;
+            gap: 66px;
+        }
+
+        .question-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 9px;
+            margin-top: 25px;
+        }
+
+        .question-pills span {
+            padding: 9px 13px;
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            background: rgba(255, 253, 248, 0.68);
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .chat-panel {
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: var(--paper);
+            box-shadow: var(--shadow);
+        }
+
+        .chat-head {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            padding: 17px 18px;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .chat-avatar {
+            display: grid;
+            width: 36px;
+            height: 36px;
+            place-items: center;
+            border-radius: 50%;
+            background: var(--green-light);
+            color: var(--green);
+            font-family: "Lora", serif;
+            font-weight: 500;
+        }
+
+        .chat-head b {
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .chat-head span {
+            display: block;
+            color: var(--muted);
+            font-size: 0.72rem;
+        }
+
+        .chat-thread {
+            display: grid;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .message {
+            max-width: 84%;
+            padding: 13px 15px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            font-size: 0.86rem;
+            line-height: 1.5;
+        }
+
+        .message.user {
+            justify-self: end;
+            border-bottom-right-radius: 5px;
+            background: var(--green-light);
+        }
+
+        .message.app {
+            justify-self: start;
+            border-bottom-left-radius: 5px;
+            background: #f3efe7;
+        }
+
+        .message strong {
+            color: var(--green);
+        }
+
+        .insight-card {
+            max-width: 92%;
+            padding: 15px;
+            border: 1px solid rgba(49, 95, 61, 0.18);
+            border-radius: 18px;
+            background: rgba(49, 95, 61, 0.07);
+        }
+
+        .insight-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 16px;
+            color: var(--muted);
+            font-size: 0.78rem;
+        }
+
+        .insight-row+.insight-row {
+            margin-top: 7px;
+        }
+
+        .insight-row strong {
+            color: var(--ink);
+        }
+
+        .insight-row span:last-child {
+            color: var(--green);
+            font-weight: 700;
+        }
+
+        .insight-summary {
+            margin-top: 11px;
+            padding-top: 11px;
+            border-top: 1px solid rgba(49, 95, 61, 0.14);
+            color: var(--ink);
+            font-size: 0.82rem;
+        }
+
+        .privacy-section {
+            background: #efe8dc;
+        }
+
+        .privacy-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+            align-items: center;
+            gap: 64px;
+        }
+
+        .privacy-card {
+            padding: 30px;
+            border: 1px solid var(--line);
+            border-radius: var(--radius-lg);
+            background: rgba(255, 253, 248, 0.68);
+        }
+
+        .privacy-items {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 13px;
+        }
+
+        .privacy-item {
+            min-height: 145px;
+            padding: 18px;
+            border: 1px solid rgba(221, 211, 197, 0.85);
+            border-radius: 16px;
+            background: rgba(255, 253, 248, 0.72);
+        }
+
+        .privacy-item span {
+            display: block;
+            margin-bottom: 16px;
+            color: var(--green);
+            font-size: 1.2rem;
+        }
+
+        .privacy-item b {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+
+        .privacy-item p {
+            font-size: 0.79rem;
+            line-height: 1.45;
+        }
+
+        .privacy-copy p {
+            max-width: 560px;
+            margin-top: 22px;
+        }
+
+        .privacy-emphasis {
+            margin-top: 20px;
+            color: var(--green);
+            font-family: "Lora", serif;
+            font-size: 1.18rem;
+            font-style: italic;
+        }
+
+        .waitlist-section {
+            padding: 100px 0;
+        }
+
+        .waitlist {
+            padding: clamp(34px, 7vw, 72px);
+            border-radius: 34px;
+            background: var(--green);
+            color: white;
+            text-align: center;
+            box-shadow: 0 30px 80px rgba(49, 95, 61, 0.2);
+        }
+
+        .waitlist .eyebrow {
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.67);
+        }
+
+        .waitlist h2 {
+            margin-inline: auto;
+            color: white;
+        }
+
+        .waitlist em {
+            color: rgba(255, 255, 255, 0.62);
+        }
+
+        .waitlist p {
+            max-width: 620px;
+            margin: 22px auto 0;
+            color: rgba(255, 255, 255, 0.77);
+        }
+
+        .waitlist .button {
+            margin-top: 28px;
+            background: white;
+            color: var(--green);
+        }
+
+        .waitlist .button:hover {
+            background: #fffdf8;
+        }
+
+        .waitlist-note {
+            margin-top: 14px !important;
+            color: rgba(255, 255, 255, 0.52) !important;
+            font-size: 0.75rem !important;
+        }
+
+        footer {
+            padding: 25px 0 32px;
+            color: #847d72;
+            font-size: 0.78rem;
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 18px;
+            border-top: 1px solid var(--line);
+            padding-top: 24px;
+        }
+
+        .footer-inner a {
+            text-decoration: none;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 650ms ease, transform 650ms ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: none;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            .button {
+                transition: none;
+            }
+        }
+
+        @media (max-width: 930px) {
+
+            .hero-grid,
+            .story-grid,
+            .chat-grid,
+            .privacy-grid {
+                grid-template-columns: 1fr;
+                gap: 42px;
+            }
+
+            .hero {
+                min-height: auto;
+            }
+
+            .hero-copy {
+                max-width: 760px;
+            }
+
+            .section-heading {
+                grid-template-columns: 1fr;
+                gap: 18px;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step {
+                min-height: auto;
+            }
+
+            .step-number {
+                margin-bottom: 35px;
+            }
+        }
+
+        @media (max-width: 680px) {
+            .container {
+                width: min(calc(100% - 28px), var(--page-width));
+            }
+
+            .section {
+                padding: 68px 0;
+            }
+
+            .topbar-inner {
+                min-height: 60px;
+            }
+
+            .brand {
+                max-width: 150px;
+                font-size: 0.98rem;
+                line-height: 1.1;
+            }
+
+            .nav-links>a:not(.button) {
+                display: none;
+            }
+
+            .nav-links .button {
+                min-height: 40px;
+                padding: 9px 15px;
+                font-size: 0.74rem;
+            }
+
+            .hero {
+                padding: 54px 0 68px;
+            }
+
+            .hero-grid {
+                gap: 36px;
+            }
+
+            h1 {
+                font-size: clamp(2.75rem, 14vw, 4.2rem);
+            }
+
+            h2 {
+                font-size: clamp(2.1rem, 11vw, 3.35rem);
+            }
+
+            .hero-actions {
+                display: grid;
+                grid-template-columns: 1fr;
+            }
+
+            .hero-actions .button {
+                width: 100%;
+            }
+
+            .chart-card {
+                padding: 13px;
+                border-radius: 21px;
+            }
+
+            .chart-header {
+                gap: 8px;
+            }
+
+            .chart-wrap svg {
+                width: 540px;
+                min-width: 540px;
+            }
+
+            .scroll-hint {
+                display: block;
+            }
+
+            .feature-grid,
+            .privacy-items {
+                grid-template-columns: 1fr;
+            }
+
+            .story-demo,
+            .privacy-card {
+                padding: 20px;
+            }
+
+            .memory-input {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .saved {
+                text-align: center;
+            }
+
+            .chat-thread {
+                padding: 14px;
+            }
+
+            .message {
+                max-width: 92%;
+                font-size: 0.8rem;
+            }
+
+            .waitlist-section {
+                padding: 70px 0;
+            }
+
+            .waitlist {
+                border-radius: 25px;
+            }
+
+            .footer-inner {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <a class="brand" href="#top">Moments Behind <span>Money</span></a>
+
+            <nav class="nav-links" aria-label="Main navigation">
+                <a href="#how-it-works">How it works</a>
+                <a href="#privacy">Privacy</a>
+                <a class="button" href="#waitlist">Join the waitlist</a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="top">
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-copy reveal">
+                    <p class="eyebrow">A calmer personal finance tool</p>
+
+                    <h1>
+                        Your money tells a <em>story.</em>
+                        This is where you read it.
+                    </h1>
+
+                    <p>
+                        Moments Behind Money helps you notice what changed, understand the life behind your spending,
+                        and explore what may be possible next.
+                    </p>
+
+                    <div class="hero-actions">
+                        <a class="button" href="#waitlist">Join the early-access list</a>
+                        <a class="button secondary" href="#how-it-works">See how it works</a>
+                    </div>
+
+                    <div class="hero-note">Built for the Netherlands · Early version · No bank connection required</div>
+                </div>
+
+                <div class="product-card chart-card reveal" aria-label="Example cumulative finance story">
+                    <div class="chart-header">
+                        <div>
+                            <div class="micro-label">October 2025 – March 2026</div>
+                            <div class="legend">
+                                <span><i class="legend-dot income-dot"></i>Income</span>
+                                <span><i class="legend-dot spending-dot"></i>Spending</span>
+                            </div>
+                        </div>
+
+                        <div class="toggle" aria-hidden="true">
+                            <span>Monthly</span>
+                            <span class="active">Cumulative</span>
+                        </div>
+                    </div>
+
+                    <div class="chart-wrap">
+                        <svg viewBox="0 0 760 350" role="img"
+                            aria-label="Cumulative income and spending with life-event labels">
+                            <defs>
+                                <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+                                    <path d="M0,0 L7,3.5 L0,7 z" fill="#24221d"></path>
+                                </marker>
+                            </defs>
+
+                            <g stroke="rgba(110,105,95,.17)" stroke-dasharray="3 7">
+                                <path d="M40 40H700M40 105H700M40 170H700M40 235H700M40 300H700"></path>
+                                <path d="M160 40V300M290 40V300M420 40V300M550 40V300M660 40V300"></path>
+                            </g>
+
+                            <g font-family="DM Sans" font-size="11" fill="#817a70">
+                                <text x="12" y="43">€27k</text>
+                                <text x="12" y="108">€20k</text>
+                                <text x="12" y="173">€13k</text>
+                                <text x="12" y="238">€6k</text>
+                                <text x="40" y="325">Oct</text>
+                                <text x="170" y="325">Nov</text>
+                                <text x="300" y="325">Dec</text>
+                                <text x="430" y="325">Jan</text>
+                                <text x="560" y="325">Feb</text>
+                                <text x="675" y="325">Mar</text>
+                            </g>
+
+                            <polyline points="40,265 150,222 270,178 390,126 510,82 620,56 700,40" fill="none"
+                                stroke="#6A9B52" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+                            </polyline>
+
+                            <polyline points="40,279 150,236 270,148 390,127 510,94 620,67 700,56" fill="none"
+                                stroke="#BF6743" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
+                            </polyline>
+
+                            <g fill="#BF6743">
+                                <circle cx="270" cy="148" r="5"></circle>
+                                <circle cx="510" cy="94" r="5"></circle>
+                                <circle cx="620" cy="67" r="5"></circle>
+                            </g>
+
+                            <g font-family="DM Sans" font-size="11" font-weight="700" fill="#24221d">
+                                <text x="205" y="93">Housewarming</text>
+                                <path d="M270 100C276 113 276 125 272 137" stroke="#24221d" fill="none"
+                                    marker-end="url(#arrow)"></path>
+
+                                <text x="448" y="150">Recovering from flu</text>
+                                <path d="M510 141C510 125 510 113 510 104" stroke="#24221d" fill="none"
+                                    marker-end="url(#arrow)"></path>
+
+                                <text x="565" y="26">Weekend in Berlin</text>
+                                <path d="M620 32C623 42 623 50 621 57" stroke="#24221d" fill="none"
+                                    marker-end="url(#arrow)"></path>
+                            </g>
+                        </svg>
+                    </div>
+
+                    <div class="scroll-hint">Swipe the chart sideways →</div>
+
+                    <div class="story-note">
+                        Not another way to track every euro. A different way to <strong>see the life behind it.</strong>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="how-it-works">
+            <div class="container">
+                <div class="section-heading reveal">
+                    <div>
+                        <p class="eyebrow">How it works</p>
+                        <h2>From bank export to a story you can actually <em>understand.</em></h2>
+                    </div>
+
+                    <p>
+                        You do not need to track every purchase manually. Upload your transactions, review what the app
+                        found, and add the context only you know.
+                    </p>
+                </div>
+
+                <div class="steps">
+                    <article class="step reveal">
+                        <div class="step-number">1</div>
+                        <h3>Upload your transactions</h3>
+                        <p>Start with a CSV export from your bank. No permanent bank connection is required.</p>
+                    </article>
+
+                    <article class="step reveal">
+                        <div class="step-number">2</div>
+                        <h3>See what changed</h3>
+                        <p>Notice monthly shifts, meaningful categories, unusual purchases, and patterns across the
+                            year.</p>
+                    </article>
+
+                    <article class="step reveal">
+                        <div class="step-number">3</div>
+                        <h3>Add the moment behind it</h3>
+                        <p>Connect the numbers to moving home, travel, stress, celebrations, routines, or whatever life
+                            looked like.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section story-section">
+            <div class="container story-grid">
+                <div class="reveal">
+                    <p class="eyebrow">Your monthly story</p>
+                    <h2>Every month has a <em>little plot twist.</em></h2>
+                    <p style="margin-top: 22px;">
+                        The app can show you what stood out. You add the part a transaction cannot explain.
+                    </p>
+                    <div class="quote">“November is no longer the month I overspent. It is the month I moved.”</div>
+                </div>
+
+                <div class="story-demo reveal">
+                    <div class="story-demo-header">
+                        <small>November story</small>
+                        <h3>What did this month make space for?</h3>
+                    </div>
+
+                    <div class="transaction-line">
+                        Shopping stood out, mostly from IKEA Amsterdam. Was something changing?
+                    </div>
+
+                    <div class="memory-prompt">
+                        Was there a purchase, celebration, trip, change, or busy period behind it?
+                    </div>
+
+                    <div class="memory-input">
+                        <div>I moved into a new apartment and bought the basics.</div>
+                        <span class="saved">✓ Saved</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="section-heading reveal">
+                    <div>
+                        <p class="eyebrow">More than a dashboard</p>
+                        <h2>Understand the past. Explore what could happen <em>next.</em></h2>
+                    </div>
+
+                    <p>
+                        The goal is not perfect budgeting. It is feeling clearer about your habits, your choices, and
+                        your options.
+                    </p>
+                </div>
+
+                <div class="feature-grid">
+                    <article class="feature reveal">
+                        <div class="feature-icon">↗</div>
+                        <h3>See the year in context</h3>
+                        <p>Understand which months shaped your overall spending and why they were different.</p>
+                    </article>
+
+                    <article class="feature reveal">
+                        <div class="feature-icon">◌</div>
+                        <h3>Notice patterns without judgment</h3>
+                        <p>Separate everyday habits from temporary life events, without labels like “good” or “bad.”</p>
+                    </article>
+
+                    <article class="feature reveal">
+                        <div class="feature-icon">◇</div>
+                        <h3>Explore possibilities</h3>
+                        <p>See what a holiday, rent increase, savings goal, or new plan may look like for you.</p>
+                    </article>
+
+                    <article class="feature reveal">
+                        <div class="feature-icon">✦</div>
+                        <h3>Ask questions naturally</h3>
+                        <p>Use chat to explore your own transactions and patterns instead of generic finance advice.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container chat-grid">
+                <div class="reveal">
+                    <p class="eyebrow">Chat with your finances</p>
+                    <h2>Ask questions about your <em>actual life.</em></h2>
+                    <p style="margin-top: 22px;">
+                        Ask why a month changed, whether a plan may be affordable, or what could move you closer to it.
+                    </p>
+
+                    <div class="question-pills" aria-label="Example questions">
+                        <span>Why was March expensive?</span>
+                        <span>Can I afford a holiday?</span>
+                        <span>What if rent goes up?</span>
+                    </div>
+                </div>
+
+                <div class="chat-panel reveal">
+                    <div class="chat-head">
+                        <div class="chat-avatar">M</div>
+                        <div>
+                            <b>Moments Behind Money</b>
+                            <span>Answers from your financial story</span>
+                        </div>
+                    </div>
+
+                    <div class="chat-thread">
+                        <div class="message user">Why did December jump so much?</div>
+
+                        <div class="message app">
+                            Mostly your housewarming: groceries, hosting, and home purchases. The increase came from a
+                            life event, not one repeated habit.
+                        </div>
+
+                        <div class="message user">Can I still afford a €3,000 city break?</div>
+
+                        <div class="insight-card">
+                            <div class="insight-row"><strong>Current pace</strong><span>July</span></div>
+                            <div class="insight-row"><strong>With €120 extra monthly</strong><span>May</span></div>
+                            <div class="insight-summary">
+                                Based on your recent saving rhythm, the trip looks possible without using your safety
+                                net.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section privacy-section" id="privacy">
+            <div class="container privacy-grid">
+                <div class="privacy-card reveal">
+                    <div class="privacy-items">
+                        <article class="privacy-item">
+                            <span>⇧</span>
+                            <b>Upload manually</b>
+                            <p>Use a CSV bank export. You stay in control of when data enters the app.</p>
+                        </article>
+
+                        <article class="privacy-item">
+                            <span>⌂</span>
+                            <b>Local-first</b>
+                            <p>Your financial history is designed to remain stored on your device.</p>
+                        </article>
+
+                        <article class="privacy-item">
+                            <span>×</span>
+                            <b>Delete anytime</b>
+                            <p>Remove uploaded data when you no longer want it in the app.</p>
+                        </article>
+
+                        <article class="privacy-item">
+                            <span>○</span>
+                            <b>No ads or profiling</b>
+                            <p>No advertising profile and no selling your financial information.</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="privacy-copy reveal">
+                    <p class="eyebrow">Private by design</p>
+                    <h2>Built for clarity, <em>not exposure.</em></h2>
+                    <p>
+                        Money is deeply personal. Moments Behind Money is being designed so you can understand your
+                        finances without handing over more information than necessary.
+                    </p>
+                    <div class="privacy-emphasis">Calm. Non-judgmental. Private.</div>
+                </div>
+            </div>
+        </section>
+
+        <section class="waitlist-section" id="waitlist">
+            <div class="container">
+                <div class="waitlist reveal">
+                    <p class="eyebrow">Early access</p>
+                    <h2>Your finances already tell a story. <em>See it more clearly.</em></h2>
+                    <p>
+                        Join the early-access list to hear when the first testing spaces open.
+                    </p>
+
+                    <!-- Replace the URL below with your Tally or Google Form link. -->
+                    <a class="button" href="https://tally.so/r/REPLACE_ME" target="_blank" rel="noopener noreferrer">
+                        Join the waitlist
+                    </a>
+
+                    <p class="waitlist-note">Early version · Built for people in the Netherlands · No spam</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-inner">
+            <span>© <span id="year"></span> Moments Behind Money</span>
+            <a href="#privacy">Privacy-first by design</a>
+        </div>
+    </footer>
+
+    <script>
+        document.getElementById("year").textContent = new Date().getFullYear();
+
+        const revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add("visible");
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.12 }
+        );
+
+        document.querySelectorAll(".reveal").forEach((element) => {
+            revealObserver.observe(element);
+        });
+    </script>
+</body>
+
+</html>
