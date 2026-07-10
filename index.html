@@ -1,12 +1,14 @@
+from pathlib import Path
+
+html = r'''
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta name="description"
-        content="Moments Behind Money helps you understand the life behind your spending, without spreadsheets, guilt, or giving up control of your data." />
-    <meta name="theme-color" content="#f7f3ea" />
+    <meta name="description" content="Moments Behind Money helps you understand the life behind your spending." />
+    <meta name="theme-color" content="#171815" />
 
     <title>Moments Behind Money</title>
 
@@ -18,20 +20,22 @@
 
     <style>
         :root {
-            --background: #f7f3ea;
-            --paper: #fffdf8;
-            --ink: #24221d;
-            --muted: #6e695f;
-            --line: #ddd3c5;
-            --green: #315f3d;
-            --green-light: #e7f0e6;
-            --green-mid: #78a879;
-            --rust: #bf6743;
-            --dark: #1d1d18;
-            --shadow: 0 24px 70px rgba(36, 34, 29, 0.09);
-            --radius-lg: 28px;
-            --radius-md: 20px;
-            --page-width: 1160px;
+            --dark: #171815;
+            --dark-soft: #21231f;
+            --cream: #f5efe5;
+            --paper: #fffaf2;
+            --ink: #20211d;
+            --muted: #706b62;
+            --line: rgba(32, 33, 29, 0.13);
+            --line-dark: rgba(255, 250, 242, 0.12);
+            --green: #8fc795;
+            --green-deep: #376443;
+            --green-soft: #e4efe3;
+            --rust: #c66c49;
+            --shadow: 0 28px 80px rgba(17, 18, 15, 0.12);
+            --radius-xl: 32px;
+            --radius-lg: 24px;
+            --max-width: 1180px;
         }
 
         * {
@@ -40,24 +44,17 @@
 
         html {
             scroll-behavior: smooth;
+            background: var(--dark);
         }
 
         body {
             margin: 0;
             overflow-x: hidden;
-            background:
-                radial-gradient(circle at 5% 0%, rgba(191, 103, 67, 0.08), transparent 28rem),
-                radial-gradient(circle at 95% 8%, rgba(49, 95, 61, 0.08), transparent 26rem),
-                var(--background);
+            background: var(--cream);
             color: var(--ink);
-            font-family: "DM Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-family: "DM Sans", system-ui, sans-serif;
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
-        }
-
-        img,
-        svg {
-            max-width: 100%;
         }
 
         a {
@@ -70,12 +67,134 @@
         }
 
         .container {
-            width: min(calc(100% - 36px), var(--page-width));
+            width: min(calc(100% - 32px), var(--max-width));
             margin-inline: auto;
         }
 
-        .section {
-            padding: 88px 0;
+        .topbar {
+            position: fixed;
+            z-index: 50;
+            top: 0;
+            right: 0;
+            left: 0;
+            border-bottom: 1px solid rgba(255, 250, 242, 0.08);
+            background: rgba(23, 24, 21, 0.78);
+            backdrop-filter: blur(18px);
+        }
+
+        .topbar-inner {
+            display: flex;
+            min-height: 64px;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+        }
+
+        .brand {
+            color: white;
+            font-family: "Lora", serif;
+            font-size: 1rem;
+            font-weight: 500;
+            letter-spacing: -0.035em;
+            line-height: 1.1;
+            text-decoration: none;
+        }
+
+        .brand em {
+            color: var(--green);
+            font-style: italic;
+        }
+
+        .nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .nav-link {
+            color: rgba(255, 250, 242, 0.64);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .button {
+            display: inline-flex;
+            min-height: 48px;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 22px;
+            border: 1px solid transparent;
+            border-radius: 999px;
+            background: var(--green);
+            color: #132016;
+            font-size: 0.83rem;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            text-decoration: none;
+            transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 34px rgba(143, 199, 149, 0.2);
+        }
+
+        .button.light {
+            background: white;
+            color: var(--green-deep);
+        }
+
+        .button.ghost {
+            border-color: rgba(255, 250, 242, 0.16);
+            background: rgba(255, 250, 242, 0.06);
+            color: white;
+        }
+
+        .nav .button {
+            min-height: 40px;
+            padding: 9px 16px;
+            font-size: 0.75rem;
+        }
+
+        .page {
+            min-height: 100svh;
+            padding: 96px 0 72px;
+        }
+
+        .dark-page {
+            background:
+                radial-gradient(circle at 90% 5%, rgba(143, 199, 149, 0.13), transparent 28rem),
+                radial-gradient(circle at 5% 85%, rgba(198, 108, 73, 0.09), transparent 26rem),
+                var(--dark);
+            color: white;
+        }
+
+        .light-page {
+            background:
+                radial-gradient(circle at 100% 0%, rgba(55, 100, 67, 0.08), transparent 24rem),
+                var(--cream);
+        }
+
+        .green-page {
+            background:
+                radial-gradient(circle at 8% 10%, rgba(255, 255, 255, 0.12), transparent 26rem),
+                var(--green-deep);
+            color: white;
+        }
+
+        .page-inner {
+            display: grid;
+            min-height: calc(100svh - 168px);
+            align-items: center;
+        }
+
+        .hero-grid,
+        .split-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
+            align-items: center;
+            gap: 66px;
         }
 
         .eyebrow {
@@ -84,9 +203,9 @@
             gap: 10px;
             margin: 0 0 16px;
             color: var(--green);
-            font-size: 0.72rem;
+            font-size: 0.68rem;
             font-weight: 700;
-            letter-spacing: 0.19em;
+            letter-spacing: 0.2em;
             text-transform: uppercase;
         }
 
@@ -97,435 +216,272 @@
             content: "";
         }
 
+        .green-page .eyebrow {
+            color: rgba(255, 255, 255, 0.64);
+        }
+
         h1,
         h2,
         h3 {
             margin: 0;
-            font-family: "Lora", Georgia, serif;
+            font-family: "Lora", serif;
             font-weight: 500;
-            letter-spacing: -0.04em;
+            letter-spacing: -0.045em;
         }
 
         h1 {
-            max-width: 850px;
-            font-size: clamp(3rem, 8vw, 6.3rem);
-            line-height: 1.01;
+            max-width: 760px;
+            color: white;
+            font-size: clamp(3.2rem, 7.6vw, 6.8rem);
+            line-height: 0.99;
         }
 
         h2 {
             max-width: 760px;
-            font-size: clamp(2.25rem, 5vw, 4.7rem);
-            line-height: 1.06;
+            font-size: clamp(2.55rem, 5.6vw, 5rem);
+            line-height: 1.03;
         }
 
         h3 {
-            font-size: 1.45rem;
+            font-size: 1.35rem;
             line-height: 1.2;
         }
 
         em {
             color: var(--green);
+            font-style: italic;
             font-weight: 500;
+        }
+
+        .green-page em {
+            color: rgba(255, 255, 255, 0.64);
         }
 
         p {
             margin: 0;
             color: var(--muted);
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
 
-        .button {
-            display: inline-flex;
-            min-height: 50px;
-            align-items: center;
-            justify-content: center;
-            padding: 13px 23px;
-            border: 1px solid transparent;
-            border-radius: 999px;
-            background: var(--green);
-            color: white;
-            font-size: 0.88rem;
-            font-weight: 700;
-            letter-spacing: 0.02em;
-            text-decoration: none;
-            transition: transform 180ms ease, background 180ms ease, box-shadow 180ms ease;
+        .dark-page p {
+            color: rgba(255, 250, 242, 0.65);
         }
 
-        .button:hover {
-            transform: translateY(-2px);
-            background: #274e32;
-            box-shadow: 0 14px 30px rgba(49, 95, 61, 0.18);
+        .green-page p {
+            color: rgba(255, 255, 255, 0.74);
         }
 
-        .button.secondary {
-            border-color: var(--line);
-            background: rgba(255, 253, 248, 0.72);
-            color: var(--ink);
-        }
-
-        .button.secondary:hover {
-            background: white;
-            box-shadow: none;
-        }
-
-        .topbar {
-            position: sticky;
-            z-index: 20;
-            top: 0;
-            border-bottom: 1px solid rgba(221, 211, 197, 0.7);
-            background: rgba(247, 243, 234, 0.88);
-            backdrop-filter: blur(16px);
-        }
-
-        .topbar-inner {
-            display: flex;
-            min-height: 68px;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px;
-        }
-
-        .brand {
-            font-family: "Lora", Georgia, serif;
-            font-size: 1.1rem;
-            font-weight: 500;
-            letter-spacing: -0.03em;
-            text-decoration: none;
-        }
-
-        .brand span {
-            color: var(--green);
-            font-style: italic;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .nav-links>a:not(.button) {
-            color: var(--muted);
-            font-size: 0.87rem;
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .nav-links>a:not(.button):hover {
-            color: var(--ink);
-        }
-
-        .hero {
-            display: grid;
-            min-height: calc(100svh - 68px);
-            align-items: center;
-            padding: 72px 0 82px;
-        }
-
-        .hero-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 0.95fr) minmax(420px, 1.05fr);
-            align-items: center;
-            gap: 68px;
-        }
-
-        .hero-copy p {
-            max-width: 630px;
-            margin-top: 25px;
-            font-size: clamp(1.06rem, 2vw, 1.25rem);
+        .lead {
+            max-width: 620px;
+            margin-top: 24px;
+            font-size: clamp(1.05rem, 2vw, 1.24rem);
             line-height: 1.7;
         }
 
-        .hero-actions {
+        .actions {
             display: flex;
             flex-wrap: wrap;
             gap: 12px;
             margin-top: 30px;
         }
 
-        .hero-note {
-            margin-top: 16px;
-            color: #8a8378;
-            font-size: 0.8rem;
+        .tiny-note {
+            margin-top: 15px;
+            color: rgba(255, 250, 242, 0.42) !important;
+            font-size: 0.75rem !important;
         }
 
-        .product-card {
+        .device {
             overflow: hidden;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            background: linear-gradient(180deg, #fffdf8, #eee6d9);
-            box-shadow: var(--shadow);
+            border: 1px solid var(--line-dark);
+            border-radius: var(--radius-xl);
+            background: linear-gradient(180deg, #fffdf8, #eee5d8);
+            color: var(--ink);
+            box-shadow: 0 34px 90px rgba(0, 0, 0, 0.32);
         }
 
-        .chart-card {
-            padding: 22px;
+        .device-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 18px;
+            border-bottom: 1px solid rgba(32, 33, 29, 0.11);
         }
 
-        .chart-header {
+        .device-brand {
+            font-family: "Lora", serif;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .device-label {
+            color: #827b70;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .device-body {
+            padding: 20px;
+        }
+
+        .chart-meta {
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 16px;
-            margin-bottom: 18px;
+            gap: 14px;
+            margin-bottom: 12px;
         }
 
-        .micro-label {
-            color: #7b7469;
-            font-size: 0.66rem;
+        .chart-meta small {
+            display: block;
+            color: #7e776d;
+            font-size: 0.61rem;
             font-weight: 700;
-            letter-spacing: 0.15em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
         }
 
         .legend {
             display: flex;
             flex-wrap: wrap;
-            gap: 13px;
-            margin-top: 7px;
-            color: #756f64;
-            font-size: 0.7rem;
+            gap: 12px;
+            margin-top: 6px;
+            color: #756f65;
+            font-size: 0.67rem;
         }
 
-        .legend-dot {
+        .legend i {
             display: inline-block;
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             margin-right: 5px;
             border-radius: 50%;
         }
 
-        .income-dot {
-            background: #6a9b52;
+        .income {
+            background: #6b9a57;
         }
 
-        .spending-dot {
+        .spend {
             background: var(--rust);
         }
 
         .toggle {
             display: inline-flex;
-            flex: 0 0 auto;
-            padding: 4px;
-            border: 1px solid rgba(49, 95, 61, 0.22);
+            padding: 3px;
+            border: 1px solid rgba(55, 100, 67, 0.18);
             border-radius: 999px;
             background: white;
         }
 
         .toggle span {
-            padding: 6px 10px;
-            color: #777064;
-            font-size: 0.65rem;
+            padding: 5px 8px;
+            color: #7d766c;
+            font-size: 0.59rem;
         }
 
         .toggle .active {
             border-radius: 999px;
-            background: var(--green-light);
-            color: var(--green);
+            background: var(--green-soft);
+            color: var(--green-deep);
             font-weight: 700;
         }
 
-        .chart-wrap {
+        .chart-scroll {
             overflow-x: auto;
-            padding-bottom: 4px;
             -webkit-overflow-scrolling: touch;
         }
 
-        .chart-wrap svg {
+        .chart-scroll svg {
             display: block;
             width: 100%;
-            min-width: 570px;
+            min-width: 560px;
         }
 
-        .story-note {
-            margin-top: 16px;
-            padding: 15px 17px;
-            border: 1px solid rgba(49, 95, 61, 0.16);
-            border-radius: 15px;
-            background: rgba(49, 95, 61, 0.08);
-            color: #686257;
-            font-size: 0.88rem;
+        .chart-note {
+            margin-top: 14px;
+            padding: 14px 16px;
+            border: 1px solid rgba(55, 100, 67, 0.15);
+            border-radius: 14px;
+            background: rgba(55, 100, 67, 0.08);
+            color: #6c665c;
+            font-size: 0.82rem;
         }
 
-        .story-note strong {
-            color: var(--green);
+        .chart-note strong {
+            color: var(--green-deep);
         }
 
         .scroll-hint {
             display: none;
-            margin-top: 8px;
-            color: #877f73;
-            font-size: 0.72rem;
+            margin-top: 7px;
+            color: #8b8377;
+            font-size: 0.68rem;
             text-align: center;
         }
 
-        .section-heading {
+        .story-cards {
             display: grid;
-            grid-template-columns: minmax(0, 0.95fr) minmax(300px, 0.55fr);
-            align-items: end;
-            gap: 50px;
-            margin-bottom: 45px;
+            gap: 14px;
         }
 
-        .section-heading p {
-            max-width: 500px;
-            padding-bottom: 5px;
-        }
-
-        .steps {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-        }
-
-        .step {
-            min-height: 250px;
-            padding: 26px;
+        .story-card {
+            padding: 22px;
             border: 1px solid var(--line);
-            border-radius: var(--radius-md);
-            background: rgba(255, 253, 248, 0.72);
-        }
-
-        .step-number {
-            display: grid;
-            width: 42px;
-            height: 42px;
-            place-items: center;
-            margin-bottom: 54px;
-            border: 1px solid rgba(49, 95, 61, 0.22);
-            border-radius: 50%;
-            background: var(--green-light);
-            color: var(--green);
-            font-family: "Lora", serif;
-            font-size: 1.05rem;
-        }
-
-        .step p {
-            margin-top: 10px;
-            font-size: 0.93rem;
-        }
-
-        .story-section {
-            background: var(--dark);
-            color: #fffdf8;
-        }
-
-        .story-section .eyebrow {
-            color: #9bc59a;
-        }
-
-        .story-section h2 {
-            color: #fffdf8;
-        }
-
-        .story-section em {
-            color: #9bc59a;
-        }
-
-        .story-section p {
-            color: rgba(255, 253, 248, 0.66);
-        }
-
-        .story-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 0.86fr) minmax(420px, 1.14fr);
-            align-items: center;
-            gap: 66px;
-        }
-
-        .story-demo {
-            padding: 28px;
-            border: 1px solid rgba(255, 253, 248, 0.12);
             border-radius: var(--radius-lg);
-            background: rgba(255, 253, 248, 0.05);
+            background: rgba(255, 250, 242, 0.74);
+            box-shadow: var(--shadow);
         }
 
-        .story-demo-header {
-            margin-bottom: 18px;
-        }
-
-        .story-demo-header small {
+        .story-card small {
             display: block;
-            margin-bottom: 5px;
-            color: rgba(255, 253, 248, 0.42);
-            font-size: 0.7rem;
+            margin-bottom: 7px;
+            color: #8a8378;
+            font-size: 0.64rem;
             font-weight: 700;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.15em;
             text-transform: uppercase;
         }
 
-        .story-demo-header h3 {
-            color: white;
-            font-size: 1.7rem;
+        .story-card p {
+            margin-top: 8px;
+            font-size: 0.87rem;
         }
 
-        .transaction-line {
-            padding: 17px;
-            border-left: 2px solid #9bc59a;
-            border-radius: 0 14px 14px 0;
-            background: rgba(255, 253, 248, 0.055);
-            color: rgba(255, 253, 248, 0.76);
-            font-size: 0.94rem;
+        .story-card.highlight {
+            border-color: rgba(55, 100, 67, 0.22);
+            background: var(--green-soft);
         }
 
-        .memory-prompt {
+        .memory {
             margin-top: 15px;
-            color: rgba(255, 253, 248, 0.54);
+            padding: 14px;
+            border-left: 2px solid var(--green-deep);
+            border-radius: 0 12px 12px 0;
+            background: rgba(255, 255, 255, 0.48);
+            color: #45423d;
             font-family: "Lora", serif;
             font-size: 0.91rem;
             font-style: italic;
         }
 
-        .memory-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 14px;
-        }
-
-        .memory-input div {
-            flex: 1;
-            min-height: 50px;
-            padding: 13px 15px;
-            border: 1px solid rgba(255, 253, 248, 0.14);
-            border-radius: 12px;
-            background: rgba(255, 253, 248, 0.08);
-            color: #fffdf8;
-            font-family: "Lora", serif;
-            font-size: 0.98rem;
-        }
-
-        .saved {
-            flex: 0 0 auto;
-            padding: 13px 15px;
-            border-radius: 11px;
-            background: #9bc59a;
-            color: #172017;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .quote {
-            max-width: 510px;
-            margin-top: 24px;
-            color: rgba(255, 253, 248, 0.72);
-            font-family: "Lora", serif;
-            font-size: 1.22rem;
-            font-style: italic;
-            line-height: 1.55;
-        }
-
-        .feature-grid {
+        .feature-list {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 18px;
-            margin-top: 34px;
+            gap: 12px;
+            margin-top: 30px;
         }
 
-        .feature {
-            padding: 22px;
+        .feature-row {
+            display: grid;
+            grid-template-columns: 42px 1fr;
+            gap: 13px;
+            align-items: start;
+            padding: 16px;
             border: 1px solid var(--line);
-            border-radius: 18px;
-            background: rgba(255, 253, 248, 0.72);
+            border-radius: 17px;
+            background: rgba(255, 250, 242, 0.68);
         }
 
         .feature-icon {
@@ -533,46 +489,22 @@
             width: 42px;
             height: 42px;
             place-items: center;
-            margin-bottom: 30px;
-            border: 1px solid rgba(49, 95, 61, 0.2);
+            border: 1px solid rgba(55, 100, 67, 0.18);
             border-radius: 50%;
-            background: var(--green-light);
-            color: var(--green);
-            font-size: 1.1rem;
+            background: var(--green-soft);
+            color: var(--green-deep);
+            font-size: 1rem;
         }
 
-        .feature p {
-            margin-top: 8px;
-            font-size: 0.9rem;
+        .feature-row p {
+            margin-top: 4px;
+            font-size: 0.84rem;
         }
 
-        .chat-grid {
-            display: grid;
-            grid-template-columns: minmax(0, 0.85fr) minmax(420px, 1.15fr);
-            align-items: center;
-            gap: 66px;
-        }
-
-        .question-pills {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 9px;
-            margin-top: 25px;
-        }
-
-        .question-pills span {
-            padding: 9px 13px;
-            border: 1px solid var(--line);
-            border-radius: 999px;
-            background: rgba(255, 253, 248, 0.68);
-            color: var(--muted);
-            font-size: 0.78rem;
-        }
-
-        .chat-panel {
+        .chat-shell {
             overflow: hidden;
             border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
+            border-radius: var(--radius-xl);
             background: var(--paper);
             box-shadow: var(--shadow);
         }
@@ -581,225 +513,180 @@
             display: flex;
             align-items: center;
             gap: 11px;
-            padding: 17px 18px;
+            padding: 16px 18px;
             border-bottom: 1px solid var(--line);
         }
 
-        .chat-avatar {
+        .bot {
             display: grid;
-            width: 36px;
-            height: 36px;
+            width: 37px;
+            height: 37px;
             place-items: center;
             border-radius: 50%;
-            background: var(--green-light);
-            color: var(--green);
+            background: var(--green-soft);
+            color: var(--green-deep);
             font-family: "Lora", serif;
             font-weight: 500;
         }
 
         .chat-head b {
             display: block;
-            font-size: 0.9rem;
+            font-size: 0.86rem;
         }
 
         .chat-head span {
-            display: block;
             color: var(--muted);
-            font-size: 0.72rem;
+            font-size: 0.69rem;
         }
 
-        .chat-thread {
+        .chat-body {
             display: grid;
-            gap: 12px;
-            padding: 20px;
+            gap: 11px;
+            padding: 18px;
         }
 
         .message {
-            max-width: 84%;
-            padding: 13px 15px;
-            border: 1px solid var(--line);
-            border-radius: 18px;
-            font-size: 0.86rem;
-            line-height: 1.5;
+            max-width: 86%;
+            padding: 12px 14px;
+            border-radius: 17px;
+            font-size: 0.82rem;
+            line-height: 1.46;
         }
 
         .message.user {
             justify-self: end;
+            border: 1px solid rgba(55, 100, 67, 0.19);
             border-bottom-right-radius: 5px;
-            background: var(--green-light);
+            background: var(--green-soft);
         }
 
         .message.app {
             justify-self: start;
+            border: 1px solid var(--line);
             border-bottom-left-radius: 5px;
-            background: #f3efe7;
+            background: #f2ece2;
         }
 
         .message strong {
-            color: var(--green);
+            color: var(--green-deep);
         }
 
-        .insight-card {
-            max-width: 92%;
-            padding: 15px;
-            border: 1px solid rgba(49, 95, 61, 0.18);
-            border-radius: 18px;
-            background: rgba(49, 95, 61, 0.07);
+        .insight {
+            max-width: 94%;
+            padding: 14px;
+            border: 1px solid rgba(55, 100, 67, 0.16);
+            border-radius: 17px;
+            background: rgba(55, 100, 67, 0.07);
         }
 
         .insight-row {
             display: flex;
             justify-content: space-between;
-            gap: 16px;
+            gap: 15px;
             color: var(--muted);
-            font-size: 0.78rem;
+            font-size: 0.75rem;
         }
 
         .insight-row+.insight-row {
             margin-top: 7px;
         }
 
-        .insight-row strong {
+        .insight-row b {
             color: var(--ink);
         }
 
-        .insight-row span:last-child {
-            color: var(--green);
+        .insight-row span {
+            color: var(--green-deep);
             font-weight: 700;
         }
 
         .insight-summary {
-            margin-top: 11px;
-            padding-top: 11px;
-            border-top: 1px solid rgba(49, 95, 61, 0.14);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(55, 100, 67, 0.12);
             color: var(--ink);
-            font-size: 0.82rem;
-        }
-
-        .privacy-section {
-            background: #efe8dc;
+            font-size: 0.78rem;
         }
 
         .privacy-grid {
             display: grid;
-            grid-template-columns: minmax(0, 0.92fr) minmax(420px, 1.08fr);
-            align-items: center;
-            gap: 64px;
-        }
-
-        .privacy-card {
-            padding: 30px;
-            border: 1px solid var(--line);
-            border-radius: var(--radius-lg);
-            background: rgba(255, 253, 248, 0.68);
-        }
-
-        .privacy-items {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 13px;
+            margin-top: 28px;
         }
 
         .privacy-item {
-            min-height: 145px;
+            min-height: 150px;
             padding: 18px;
-            border: 1px solid rgba(221, 211, 197, 0.85);
-            border-radius: 16px;
-            background: rgba(255, 253, 248, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .privacy-item span {
             display: block;
-            margin-bottom: 16px;
-            color: var(--green);
-            font-size: 1.2rem;
+            margin-bottom: 22px;
+            color: white;
+            font-size: 1.15rem;
         }
 
         .privacy-item b {
             display: block;
             margin-bottom: 5px;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
         }
 
         .privacy-item p {
-            font-size: 0.79rem;
+            font-size: 0.76rem;
             line-height: 1.45;
         }
 
-        .privacy-copy p {
-            max-width: 560px;
-            margin-top: 22px;
-        }
-
-        .privacy-emphasis {
-            margin-top: 20px;
-            color: var(--green);
-            font-family: "Lora", serif;
-            font-size: 1.18rem;
-            font-style: italic;
-        }
-
-        .waitlist-section {
-            padding: 100px 0;
-        }
-
-        .waitlist {
-            padding: clamp(34px, 7vw, 72px);
-            border-radius: 34px;
-            background: var(--green);
-            color: white;
+        .cta-box {
+            max-width: 760px;
+            margin-inline: auto;
             text-align: center;
-            box-shadow: 0 30px 80px rgba(49, 95, 61, 0.2);
         }
 
-        .waitlist .eyebrow {
+        .cta-box .eyebrow {
             justify-content: center;
-            color: rgba(255, 255, 255, 0.67);
         }
 
-        .waitlist h2 {
+        .cta-box h2 {
             margin-inline: auto;
             color: white;
         }
 
-        .waitlist em {
-            color: rgba(255, 255, 255, 0.62);
+        .cta-box .lead {
+            margin-inline: auto;
         }
 
-        .waitlist p {
-            max-width: 620px;
-            margin: 22px auto 0;
-            color: rgba(255, 255, 255, 0.77);
+        .cta-links {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 30px;
         }
 
-        .waitlist .button {
-            margin-top: 28px;
-            background: white;
-            color: var(--green);
-        }
-
-        .waitlist .button:hover {
-            background: #fffdf8;
-        }
-
-        .waitlist-note {
-            margin-top: 14px !important;
-            color: rgba(255, 255, 255, 0.52) !important;
-            font-size: 0.75rem !important;
+        .social-note {
+            margin-top: 18px;
+            color: rgba(255, 255, 255, 0.48) !important;
+            font-size: 0.74rem !important;
         }
 
         footer {
-            padding: 25px 0 32px;
-            color: #847d72;
-            font-size: 0.78rem;
+            padding: 22px 0 28px;
+            background: var(--green-deep);
+            color: rgba(255, 255, 255, 0.52);
+            font-size: 0.74rem;
         }
 
         .footer-inner {
             display: flex;
             justify-content: space-between;
-            gap: 18px;
-            border-top: 1px solid var(--line);
-            padding-top: 24px;
+            gap: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.13);
+            padding-top: 20px;
         }
 
         .footer-inner a {
@@ -808,7 +695,7 @@
 
         .reveal {
             opacity: 0;
-            transform: translateY(16px);
+            transform: translateY(18px);
             transition: opacity 650ms ease, transform 650ms ease;
         }
 
@@ -833,148 +720,111 @@
             }
         }
 
-        @media (max-width: 930px) {
+        @media (max-width: 920px) {
 
             .hero-grid,
-            .story-grid,
-            .chat-grid,
-            .privacy-grid {
+            .split-grid {
                 grid-template-columns: 1fr;
                 gap: 42px;
             }
 
-            .hero {
+            .page-inner {
                 min-height: auto;
             }
 
-            .hero-copy {
-                max-width: 760px;
-            }
-
-            .section-heading {
-                grid-template-columns: 1fr;
-                gap: 18px;
-            }
-
-            .steps {
-                grid-template-columns: 1fr;
-            }
-
-            .step {
+            .page {
                 min-height: auto;
-            }
-
-            .step-number {
-                margin-bottom: 35px;
             }
         }
 
         @media (max-width: 680px) {
             .container {
-                width: min(calc(100% - 28px), var(--page-width));
-            }
-
-            .section {
-                padding: 68px 0;
+                width: min(calc(100% - 26px), var(--max-width));
             }
 
             .topbar-inner {
-                min-height: 60px;
+                min-height: 58px;
             }
 
             .brand {
-                max-width: 150px;
-                font-size: 0.98rem;
-                line-height: 1.1;
+                max-width: 145px;
+                font-size: 0.9rem;
             }
 
-            .nav-links>a:not(.button) {
+            .nav-link {
                 display: none;
             }
 
-            .nav-links .button {
-                min-height: 40px;
-                padding: 9px 15px;
-                font-size: 0.74rem;
+            .nav .button {
+                min-height: 38px;
+                padding: 8px 14px;
+                font-size: 0.7rem;
             }
 
-            .hero {
-                padding: 54px 0 68px;
+            .page {
+                padding: 82px 0 56px;
             }
 
-            .hero-grid {
-                gap: 36px;
+            .page-inner {
+                min-height: auto;
+            }
+
+            .hero-grid,
+            .split-grid {
+                gap: 34px;
             }
 
             h1 {
-                font-size: clamp(2.75rem, 14vw, 4.2rem);
+                font-size: clamp(3rem, 15vw, 4.35rem);
             }
 
             h2 {
-                font-size: clamp(2.1rem, 11vw, 3.35rem);
+                font-size: clamp(2.35rem, 12vw, 3.5rem);
             }
 
-            .hero-actions {
+            .lead {
+                margin-top: 19px;
+                font-size: 0.98rem;
+            }
+
+            .actions,
+            .cta-links {
                 display: grid;
                 grid-template-columns: 1fr;
             }
 
-            .hero-actions .button {
+            .actions .button,
+            .cta-links .button {
                 width: 100%;
             }
 
-            .chart-card {
+            .device {
+                border-radius: 24px;
+            }
+
+            .device-body {
                 padding: 13px;
-                border-radius: 21px;
             }
 
-            .chart-header {
-                gap: 8px;
-            }
-
-            .chart-wrap svg {
-                width: 540px;
-                min-width: 540px;
+            .chart-scroll svg {
+                width: 520px;
+                min-width: 520px;
             }
 
             .scroll-hint {
                 display: block;
             }
 
-            .feature-grid,
-            .privacy-items {
+            .story-card {
+                padding: 18px;
+            }
+
+            .privacy-grid {
                 grid-template-columns: 1fr;
             }
 
-            .story-demo,
-            .privacy-card {
-                padding: 20px;
-            }
-
-            .memory-input {
-                align-items: stretch;
-                flex-direction: column;
-            }
-
-            .saved {
-                text-align: center;
-            }
-
-            .chat-thread {
-                padding: 14px;
-            }
-
-            .message {
-                max-width: 92%;
-                font-size: 0.8rem;
-            }
-
-            .waitlist-section {
-                padding: 70px 0;
-            }
-
-            .waitlist {
-                border-radius: 25px;
+            .privacy-item {
+                min-height: auto;
             }
 
             .footer-inner {
@@ -987,276 +837,133 @@
 <body>
     <header class="topbar">
         <div class="container topbar-inner">
-            <a class="brand" href="#top">Moments Behind <span>Money</span></a>
+            <a class="brand" href="#home">Moments Behind <em>Money</em></a>
 
-            <nav class="nav-links" aria-label="Main navigation">
-                <a href="#how-it-works">How it works</a>
-                <a href="#privacy">Privacy</a>
-                <a class="button" href="#waitlist">Join the waitlist</a>
+            <nav class="nav" aria-label="Main navigation">
+                <a class="nav-link" href="#story">The idea</a>
+                <a class="nav-link" href="#explore">Explore</a>
+                <a class="button" href="#join">Join early access</a>
             </nav>
         </div>
     </header>
 
-    <main id="top">
-        <section class="hero">
-            <div class="container hero-grid">
-                <div class="hero-copy reveal">
-                    <p class="eyebrow">A calmer personal finance tool</p>
+    <main>
+        <!-- PAGE 1: HERO -->
+        <section class="page dark-page" id="home">
+            <div class="container page-inner">
+                <div class="hero-grid">
+                    <div class="reveal">
+                        <p class="eyebrow">A calmer personal finance tool</p>
 
-                    <h1>
-                        Your money tells a <em>story.</em>
-                        This is where you read it.
-                    </h1>
+                        <h1>
+                            Your money tells a <em>story.</em>
+                            This helps you see it.
+                        </h1>
 
-                    <p>
-                        Moments Behind Money helps you notice what changed, understand the life behind your spending,
-                        and explore what may be possible next.
-                    </p>
+                        <p class="lead">
+                            Understand what changed, remember the life behind your spending, and explore what may be
+                            possible next.
+                        </p>
 
-                    <div class="hero-actions">
-                        <a class="button" href="#waitlist">Join the early-access list</a>
-                        <a class="button secondary" href="#how-it-works">See how it works</a>
+                        <div class="actions">
+                            <!-- Replace this with your real Tally or Google Form link -->
+                            <a class="button" href="https://tally.so/r/REPLACE_ME" target="_blank"
+                                rel="noopener noreferrer">
+                                Join the waitlist
+                            </a>
+
+                            <!-- This scrolls to the next section -->
+                            <a class="button ghost" href="#story">See how it works</a>
+                        </div>
+
+                        <p class="tiny-note">Early version · Built for the Netherlands · No bank connection required</p>
                     </div>
 
-                    <div class="hero-note">Built for the Netherlands · Early version · No bank connection required</div>
-                </div>
+                    <div class="device reveal">
+                        <div class="device-top">
+                            <span class="device-brand">Moments Behind Money</span>
+                            <span class="device-label">Your year in context</span>
+                        </div>
 
-                <div class="product-card chart-card reveal" aria-label="Example cumulative finance story">
-                    <div class="chart-header">
-                        <div>
-                            <div class="micro-label">October 2025 – March 2026</div>
-                            <div class="legend">
-                                <span><i class="legend-dot income-dot"></i>Income</span>
-                                <span><i class="legend-dot spending-dot"></i>Spending</span>
+                        <div class="device-body">
+                            <div class="chart-meta">
+                                <div>
+                                    <small>October 2025 – March 2026</small>
+                                    <div class="legend">
+                                        <span><i class="income"></i>Income</span>
+                                        <span><i class="spend"></i>Spending</span>
+                                    </div>
+                                </div>
+
+                                <div class="toggle" aria-hidden="true">
+                                    <span>Monthly</span>
+                                    <span class="active">Cumulative</span>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="toggle" aria-hidden="true">
-                            <span>Monthly</span>
-                            <span class="active">Cumulative</span>
-                        </div>
-                    </div>
+                            <div class="chart-scroll">
+                                <svg viewBox="0 0 760 350" role="img"
+                                    aria-label="Cumulative income and spending with life-event labels">
+                                    <defs>
+                                        <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5"
+                                            orient="auto">
+                                            <path d="M0,0 L7,3.5 L0,7 z" fill="#20211d"></path>
+                                        </marker>
+                                    </defs>
 
-                    <div class="chart-wrap">
-                        <svg viewBox="0 0 760 350" role="img"
-                            aria-label="Cumulative income and spending with life-event labels">
-                            <defs>
-                                <marker id="arrow" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
-                                    <path d="M0,0 L7,3.5 L0,7 z" fill="#24221d"></path>
-                                </marker>
-                            </defs>
+                                    <g stroke="rgba(112,107,98,.18)" stroke-dasharray="3 7">
+                                        <path d="M40 40H700M40 105H700M40 170H700M40 235H700M40 300H700"></path>
+                                        <path d="M160 40V300M290 40V300M420 40V300M550 40V300M660 40V300"></path>
+                                    </g>
 
-                            <g stroke="rgba(110,105,95,.17)" stroke-dasharray="3 7">
-                                <path d="M40 40H700M40 105H700M40 170H700M40 235H700M40 300H700"></path>
-                                <path d="M160 40V300M290 40V300M420 40V300M550 40V300M660 40V300"></path>
-                            </g>
+                                    <g font-family="DM Sans" font-size="11" fill="#817a70">
+                                        <text x="12" y="43">€27k</text>
+                                        <text x="12" y="108">€20k</text>
+                                        <text x="12" y="173">€13k</text>
+                                        <text x="12" y="238">€6k</text>
+                                        <text x="40" y="325">Oct</text>
+                                        <text x="170" y="325">Nov</text>
+                                        <text x="300" y="325">Dec</text>
+                                        <text x="430" y="325">Jan</text>
+                                        <text x="560" y="325">Feb</text>
+                                        <text x="675" y="325">Mar</text>
+                                    </g>
 
-                            <g font-family="DM Sans" font-size="11" fill="#817a70">
-                                <text x="12" y="43">€27k</text>
-                                <text x="12" y="108">€20k</text>
-                                <text x="12" y="173">€13k</text>
-                                <text x="12" y="238">€6k</text>
-                                <text x="40" y="325">Oct</text>
-                                <text x="170" y="325">Nov</text>
-                                <text x="300" y="325">Dec</text>
-                                <text x="430" y="325">Jan</text>
-                                <text x="560" y="325">Feb</text>
-                                <text x="675" y="325">Mar</text>
-                            </g>
+                                    <polyline points="40,265 150,222 270,178 390,126 510,82 620,56 700,40" fill="none"
+                                        stroke="#6b9a57" stroke-width="4" stroke-linecap="round"
+                                        stroke-linejoin="round"></polyline>
 
-                            <polyline points="40,265 150,222 270,178 390,126 510,82 620,56 700,40" fill="none"
-                                stroke="#6A9B52" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
-                            </polyline>
+                                    <polyline points="40,279 150,236 270,148 390,127 510,94 620,67 700,56" fill="none"
+                                        stroke="#c66c49" stroke-width="3.5" stroke-linecap="round"
+                                        stroke-linejoin="round"></polyline>
 
-                            <polyline points="40,279 150,236 270,148 390,127 510,94 620,67 700,56" fill="none"
-                                stroke="#BF6743" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round">
-                            </polyline>
+                                    <g fill="#c66c49">
+                                        <circle cx="270" cy="148" r="5"></circle>
+                                        <circle cx="510" cy="94" r="5"></circle>
+                                        <circle cx="620" cy="67" r="5"></circle>
+                                    </g>
 
-                            <g fill="#BF6743">
-                                <circle cx="270" cy="148" r="5"></circle>
-                                <circle cx="510" cy="94" r="5"></circle>
-                                <circle cx="620" cy="67" r="5"></circle>
-                            </g>
+                                    <g font-family="DM Sans" font-size="11" font-weight="700" fill="#20211d">
+                                        <text x="205" y="93">Housewarming</text>
+                                        <path d="M270 100C276 113 276 125 272 137" stroke="#20211d" fill="none"
+                                            marker-end="url(#arrow)"></path>
 
-                            <g font-family="DM Sans" font-size="11" font-weight="700" fill="#24221d">
-                                <text x="205" y="93">Housewarming</text>
-                                <path d="M270 100C276 113 276 125 272 137" stroke="#24221d" fill="none"
-                                    marker-end="url(#arrow)"></path>
+                                        <text x="448" y="150">Recovering from flu</text>
+                                        <path d="M510 141C510 125 510 113 510 104" stroke="#20211d" fill="none"
+                                            marker-end="url(#arrow)"></path>
 
-                                <text x="448" y="150">Recovering from flu</text>
-                                <path d="M510 141C510 125 510 113 510 104" stroke="#24221d" fill="none"
-                                    marker-end="url(#arrow)"></path>
+                                        <text x="565" y="26">Weekend in Berlin</text>
+                                        <path d="M620 32C623 42 623 50 621 57" stroke="#20211d" fill="none"
+                                            marker-end="url(#arrow)"></path>
+                                    </g>
+                                </svg>
+                            </div>
 
-                                <text x="565" y="26">Weekend in Berlin</text>
-                                <path d="M620 32C623 42 623 50 621 57" stroke="#24221d" fill="none"
-                                    marker-end="url(#arrow)"></path>
-                            </g>
-                        </svg>
-                    </div>
+                            <div class="scroll-hint">Swipe the chart sideways →</div>
 
-                    <div class="scroll-hint">Swipe the chart sideways →</div>
-
-                    <div class="story-note">
-                        Not another way to track every euro. A different way to <strong>see the life behind it.</strong>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section" id="how-it-works">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <div>
-                        <p class="eyebrow">How it works</p>
-                        <h2>From bank export to a story you can actually <em>understand.</em></h2>
-                    </div>
-
-                    <p>
-                        You do not need to track every purchase manually. Upload your transactions, review what the app
-                        found, and add the context only you know.
-                    </p>
-                </div>
-
-                <div class="steps">
-                    <article class="step reveal">
-                        <div class="step-number">1</div>
-                        <h3>Upload your transactions</h3>
-                        <p>Start with a CSV export from your bank. No permanent bank connection is required.</p>
-                    </article>
-
-                    <article class="step reveal">
-                        <div class="step-number">2</div>
-                        <h3>See what changed</h3>
-                        <p>Notice monthly shifts, meaningful categories, unusual purchases, and patterns across the
-                            year.</p>
-                    </article>
-
-                    <article class="step reveal">
-                        <div class="step-number">3</div>
-                        <h3>Add the moment behind it</h3>
-                        <p>Connect the numbers to moving home, travel, stress, celebrations, routines, or whatever life
-                            looked like.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section story-section">
-            <div class="container story-grid">
-                <div class="reveal">
-                    <p class="eyebrow">Your monthly story</p>
-                    <h2>Every month has a <em>little plot twist.</em></h2>
-                    <p style="margin-top: 22px;">
-                        The app can show you what stood out. You add the part a transaction cannot explain.
-                    </p>
-                    <div class="quote">“November is no longer the month I overspent. It is the month I moved.”</div>
-                </div>
-
-                <div class="story-demo reveal">
-                    <div class="story-demo-header">
-                        <small>November story</small>
-                        <h3>What did this month make space for?</h3>
-                    </div>
-
-                    <div class="transaction-line">
-                        Shopping stood out, mostly from IKEA Amsterdam. Was something changing?
-                    </div>
-
-                    <div class="memory-prompt">
-                        Was there a purchase, celebration, trip, change, or busy period behind it?
-                    </div>
-
-                    <div class="memory-input">
-                        <div>I moved into a new apartment and bought the basics.</div>
-                        <span class="saved">✓ Saved</span>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container">
-                <div class="section-heading reveal">
-                    <div>
-                        <p class="eyebrow">More than a dashboard</p>
-                        <h2>Understand the past. Explore what could happen <em>next.</em></h2>
-                    </div>
-
-                    <p>
-                        The goal is not perfect budgeting. It is feeling clearer about your habits, your choices, and
-                        your options.
-                    </p>
-                </div>
-
-                <div class="feature-grid">
-                    <article class="feature reveal">
-                        <div class="feature-icon">↗</div>
-                        <h3>See the year in context</h3>
-                        <p>Understand which months shaped your overall spending and why they were different.</p>
-                    </article>
-
-                    <article class="feature reveal">
-                        <div class="feature-icon">◌</div>
-                        <h3>Notice patterns without judgment</h3>
-                        <p>Separate everyday habits from temporary life events, without labels like “good” or “bad.”</p>
-                    </article>
-
-                    <article class="feature reveal">
-                        <div class="feature-icon">◇</div>
-                        <h3>Explore possibilities</h3>
-                        <p>See what a holiday, rent increase, savings goal, or new plan may look like for you.</p>
-                    </article>
-
-                    <article class="feature reveal">
-                        <div class="feature-icon">✦</div>
-                        <h3>Ask questions naturally</h3>
-                        <p>Use chat to explore your own transactions and patterns instead of generic finance advice.</p>
-                    </article>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <div class="container chat-grid">
-                <div class="reveal">
-                    <p class="eyebrow">Chat with your finances</p>
-                    <h2>Ask questions about your <em>actual life.</em></h2>
-                    <p style="margin-top: 22px;">
-                        Ask why a month changed, whether a plan may be affordable, or what could move you closer to it.
-                    </p>
-
-                    <div class="question-pills" aria-label="Example questions">
-                        <span>Why was March expensive?</span>
-                        <span>Can I afford a holiday?</span>
-                        <span>What if rent goes up?</span>
-                    </div>
-                </div>
-
-                <div class="chat-panel reveal">
-                    <div class="chat-head">
-                        <div class="chat-avatar">M</div>
-                        <div>
-                            <b>Moments Behind Money</b>
-                            <span>Answers from your financial story</span>
-                        </div>
-                    </div>
-
-                    <div class="chat-thread">
-                        <div class="message user">Why did December jump so much?</div>
-
-                        <div class="message app">
-                            Mostly your housewarming: groceries, hosting, and home purchases. The increase came from a
-                            life event, not one repeated habit.
-                        </div>
-
-                        <div class="message user">Can I still afford a €3,000 city break?</div>
-
-                        <div class="insight-card">
-                            <div class="insight-row"><strong>Current pace</strong><span>July</span></div>
-                            <div class="insight-row"><strong>With €120 extra monthly</strong><span>May</span></div>
-                            <div class="insight-summary">
-                                Based on your recent saving rhythm, the trip looks possible without using your safety
-                                net.
+                            <div class="chart-note">
+                                Not another way to track every euro. A different way to <strong>see the life behind
+                                    it.</strong>
                             </div>
                         </div>
                     </div>
@@ -1264,63 +971,185 @@
             </div>
         </section>
 
-        <section class="section privacy-section" id="privacy">
-            <div class="container privacy-grid">
-                <div class="privacy-card reveal">
-                    <div class="privacy-items">
+        <!-- PAGE 2: THE STORY -->
+        <section class="page light-page" id="story">
+            <div class="container page-inner">
+                <div class="split-grid">
+                    <div class="reveal">
+                        <p class="eyebrow">The idea</p>
+                        <h2>Every month has a <em>little plot twist.</em></h2>
+                        <p class="lead">
+                            The app notices what changed. You add the part only you know: the move, the celebration, the
+                            stressful week, or the trip behind the numbers.
+                        </p>
+
+                        <div class="feature-list">
+                            <div class="feature-row">
+                                <div class="feature-icon">1</div>
+                                <div>
+                                    <h3>Upload a bank export</h3>
+                                    <p>Start with a CSV file. No permanent bank connection is required.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-row">
+                                <div class="feature-icon">2</div>
+                                <div>
+                                    <h3>See what stood out</h3>
+                                    <p>Notice monthly shifts, unusual purchases, and patterns across the year.</p>
+                                </div>
+                            </div>
+
+                            <div class="feature-row">
+                                <div class="feature-icon">3</div>
+                                <div>
+                                    <h3>Add the moment behind it</h3>
+                                    <p>Turn a spike into context instead of another number to judge.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="story-cards reveal">
+                        <article class="story-card">
+                            <small>November</small>
+                            <h3>Shopping was higher than usual</h3>
+                            <p>Most of the increase came from IKEA and home purchases.</p>
+                        </article>
+
+                        <article class="story-card highlight">
+                            <small>Your context</small>
+                            <h3>I moved into a new apartment</h3>
+                            <div class="memory">“November is no longer the month I overspent. It is the month I moved.”
+                            </div>
+                        </article>
+
+                        <article class="story-card">
+                            <small>What the app remembers</small>
+                            <h3>A temporary life event, not a repeated habit</h3>
+                            <p>Your future insights can now use that context instead of treating the month as random
+                                overspending.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 3: CHAT + POSSIBILITIES -->
+        <section class="page light-page" id="explore">
+            <div class="container page-inner">
+                <div class="split-grid">
+                    <div class="reveal">
+                        <p class="eyebrow">Explore what comes next</p>
+                        <h2>Ask questions about your <em>actual life.</em></h2>
+                        <p class="lead">
+                            Go beyond generic financial advice. Ask what changed, whether a plan may be affordable, or
+                            what could move you closer to it.
+                        </p>
+
+                        <div class="actions">
+                            <!-- Example external link -->
+                            <a class="button" href="https://www.linkedin.com/" target="_blank"
+                                rel="noopener noreferrer">
+                                Follow the project
+                            </a>
+
+                            <!-- Example internal scroll link -->
+                            <a class="button ghost"
+                                style="color:#20211d;border-color:rgba(32,33,29,.13);background:rgba(255,250,242,.7);"
+                                href="#join">
+                                Get early access
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="chat-shell reveal">
+                        <div class="chat-head">
+                            <div class="bot">M</div>
+                            <div>
+                                <b>Moments Behind Money</b>
+                                <span>Answers from your financial story</span>
+                            </div>
+                        </div>
+
+                        <div class="chat-body">
+                            <div class="message user">Why did December jump so much?</div>
+
+                            <div class="message app">
+                                Mostly your housewarming: groceries, hosting, and home purchases. The increase came from
+                                a life event, not one repeated habit.
+                            </div>
+
+                            <div class="message user">Can I still afford a €3,000 city break?</div>
+
+                            <div class="insight">
+                                <div class="insight-row"><b>Current saving pace</b><span>July</span></div>
+                                <div class="insight-row"><b>With €120 extra monthly</b><span>May</span></div>
+                                <div class="insight-summary">
+                                    Based on your recent rhythm, the trip looks possible without using your safety net.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- PAGE 4: PRIVACY + WAITLIST -->
+        <section class="page green-page" id="join">
+            <div class="container page-inner">
+                <div class="cta-box reveal">
+                    <p class="eyebrow">Private by design</p>
+                    <h2>Your finances are personal. <em>They should stay that way.</em></h2>
+                    <p class="lead">
+                        Moments Behind Money is being built around manual uploads, local-first storage, and giving you
+                        control over what stays and what gets deleted.
+                    </p>
+
+                    <div class="privacy-grid">
                         <article class="privacy-item">
                             <span>⇧</span>
-                            <b>Upload manually</b>
-                            <p>Use a CSV bank export. You stay in control of when data enters the app.</p>
+                            <b>Manual upload</b>
+                            <p>Use a CSV export. No continuous bank connection is needed.</p>
                         </article>
 
                         <article class="privacy-item">
                             <span>⌂</span>
                             <b>Local-first</b>
-                            <p>Your financial history is designed to remain stored on your device.</p>
+                            <p>Your financial history is designed to remain on your device.</p>
                         </article>
 
                         <article class="privacy-item">
                             <span>×</span>
                             <b>Delete anytime</b>
-                            <p>Remove uploaded data when you no longer want it in the app.</p>
+                            <p>Remove your uploaded data when you no longer want it in the app.</p>
                         </article>
 
                         <article class="privacy-item">
                             <span>○</span>
-                            <b>No ads or profiling</b>
-                            <p>No advertising profile and no selling your financial information.</p>
+                            <b>No profiling</b>
+                            <p>No ads and no selling your financial information.</p>
                         </article>
                     </div>
-                </div>
 
-                <div class="privacy-copy reveal">
-                    <p class="eyebrow">Private by design</p>
-                    <h2>Built for clarity, <em>not exposure.</em></h2>
-                    <p>
-                        Money is deeply personal. Moments Behind Money is being designed so you can understand your
-                        finances without handing over more information than necessary.
+                    <div class="cta-links">
+                        <!-- Replace with your actual waitlist form -->
+                        <a class="button light" href="https://tally.so/r/REPLACE_ME" target="_blank"
+                            rel="noopener noreferrer">
+                            Join the waitlist
+                        </a>
+
+                        <!-- Replace with any external website you want -->
+                        <a class="button ghost" href="https://www.linkedin.com/" target="_blank"
+                            rel="noopener noreferrer">
+                            Follow on LinkedIn
+                        </a>
+                    </div>
+
+                    <p class="social-note">
+                        These buttons can point to Tally, Google Forms, LinkedIn, Instagram, GitHub, or any other
+                        website.
                     </p>
-                    <div class="privacy-emphasis">Calm. Non-judgmental. Private.</div>
-                </div>
-            </div>
-        </section>
-
-        <section class="waitlist-section" id="waitlist">
-            <div class="container">
-                <div class="waitlist reveal">
-                    <p class="eyebrow">Early access</p>
-                    <h2>Your finances already tell a story. <em>See it more clearly.</em></h2>
-                    <p>
-                        Join the early-access list to hear when the first testing spaces open.
-                    </p>
-
-                    <!-- Replace the URL below with your Tally or Google Form link. -->
-                    <a class="button" href="https://tally.so/r/REPLACE_ME" target="_blank" rel="noopener noreferrer">
-                        Join the waitlist
-                    </a>
-
-                    <p class="waitlist-note">Early version · Built for people in the Netherlands · No spam</p>
                 </div>
             </div>
         </section>
@@ -1329,28 +1158,26 @@
     <footer>
         <div class="container footer-inner">
             <span>© <span id="year"></span> Moments Behind Money</span>
-            <a href="#privacy">Privacy-first by design</a>
+            <a href="#home">Back to the top</a>
         </div>
     </footer>
 
     <script>
         document.getElementById("year").textContent = new Date().getFullYear();
 
-        const revealObserver = new IntersectionObserver(
+        const observer = new IntersectionObserver(
             (entries) => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add("visible");
-                        revealObserver.unobserve(entry.target);
+                        observer.unobserve(entry.target);
                     }
                 });
             },
             { threshold: 0.12 }
         );
 
-        document.querySelectorAll(".reveal").forEach((element) => {
-            revealObserver.observe(element);
-        });
+        document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
     </script>
 </body>
 
