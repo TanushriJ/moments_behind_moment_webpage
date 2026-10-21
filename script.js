@@ -2,7 +2,7 @@
 
 (() => {
   // Google Apps Script waitlist destination
-  const SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycby3uMDJobKhYzxj1qjOA8r8Pi4R7CXw2Cj27_vnjWLr4bjKK8WADTONgAtrOjFSsq4y/exec';
+  const SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbzN-gL5IUZfLPTnKhvhTfR8y5G2M-e2yZxqsLCXt9_M3lc9Y46PaEesDW7e_P4yi1h_gg/exec';
 
   const euro = new Intl.NumberFormat('en-IE', {
     style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
@@ -646,7 +646,7 @@
           body: JSON.stringify({ name, email }),
         });
         if (response.type !== 'opaque' && !response.ok) throw new Error('Signup request failed');
-        status.textContent = 'Your signup request was sent. Thank you for your interest in MBM.';
+        status.textContent = 'Your signup request was sent. Thank you for your interest in this app.';
         form.reset();
       } catch {
         status.dataset.state = 'error';
