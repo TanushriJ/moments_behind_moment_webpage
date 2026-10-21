@@ -2,7 +2,7 @@
 
 (() => {
   // Google Apps Script waitlist destination
-  const SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycbxuOnVVExywvc3Sl5enVZxZkv3QHW3LzKKU9rLxTxkuUpPuD6LUuMNJkonee0A-7zQG/exec';
+  const SIGNUP_ENDPOINT = 'https://script.google.com/macros/s/AKfycby3uMDJobKhYzxj1qjOA8r8Pi4R7CXw2Cj27_vnjWLr4bjKK8WADTONgAtrOjFSsq4y/exec';
 
   const euro = new Intl.NumberFormat('en-IE', {
     style: 'currency', currency: 'EUR', maximumFractionDigits: 0,
@@ -148,57 +148,6 @@
     });
   }
 
-  /* ═══════════════════════════════════════════
-     2. SAVINGS SCENARIO SLIDER & DRAW-IN ANIMATION
-     ═══════════════════════════════════════════ */
-  const slider = document.getElementById('welcome-contribution');
-  const savingsCard = document.querySelector('.savingsCard');
-  if (slider && savingsCard) {
-    const savingsChart = savingsCard.querySelector('svg.chart');
-
-    // Trigger stroke draw-in animation on scroll
-    if ('IntersectionObserver' in window) {
-      let savingsAnimated = false;
-      const savingsObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !savingsAnimated) {
-            savingsAnimated = true;
-            savingsCard.classList.add('chart-animated');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-      savingsObserver.observe(savingsCard);
-    }
-
-    function updateSavings() {
-      const contribution = Number(slider.value);
-      const y = (amount) => 190 - (amount / 3000) * 160;
-      const points = Array.from({ length: 7 }, (_, month) => `${52 + month * 65},${y(300 + contribution * month)}`).join(' ');
-      const line = savingsChart?.querySelector('.savingsLine');
-      const area = savingsChart?.querySelector('.savingsArea');
-      if (line) line.setAttribute('points', points);
-      if (area) area.setAttribute('points', `52,190 ${points} 442,190`);
-      savingsChart?.querySelectorAll('.savingsPoint').forEach((point, month) => {
-        point.setAttribute('cy', String(y(300 + contribution * month)));
-      });
-      const title = savingsChart?.querySelector('title');
-      if (title) title.textContent = `Example savings over six months at ${money(contribution)} per month`;
-      const desc = savingsChart?.querySelector('desc');
-      if (desc) desc.textContent = `Starting with €300, saving ${money(contribution)} per month gives ${money(300 + contribution * 6)} after six months. The comparison saves €150 per month. The target is €1,800. No interest or withdrawals assumed.`;
-      const out = savingsCard.querySelector('output');
-      if (out) out.textContent = money(contribution);
-      const result = savingsCard.querySelector('.savingsResult');
-      if (result) {
-        const checkmark = result.querySelector('svg');
-        const months = Math.ceil(1500 / contribution);
-        result.replaceChildren(checkmark ? checkmark.cloneNode(true) : '', document.createTextNode(`${months} months to your example goal`));
-      }
-    }
-    slider.addEventListener('input', updateSavings);
-    slider.addEventListener('change', updateSavings);
-    updateSavings();
-  }
 
   /* ═══════════════════════════════════════════
      3. SCROLL REVEALS
@@ -363,7 +312,7 @@
   const scenarios = [
     {
       title: 'October spending',
-      meta: 'Answers grounded in your transaction data',
+      meta: 'Dissecting transactions & visualizing answers',
       userQuestion: 'How much did I spend on food vs transport last month?',
       aiParagraphs: [
         'In October, you spent <strong>€342</strong> on Food & Groceries and <strong>€127</strong> on Transport & Travel.',
