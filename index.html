@@ -213,122 +213,263 @@
   </div>
 </section>
 
-<!-- ═══ CHAT DEMO — "See it in practice" ═══ -->
+<!-- ═══ WALKTHROUGH — "See it in practice" ═══ -->
 <section class="section wrap" id="welcome-demo" aria-labelledby="welcome-demo-title">
   <p class="eyebrow">03 / SEE IT IN PRACTICE</p>
   <div class="sectionIntro">
-    <h2 id="welcome-demo-title">Ask anything.<br><em>Get answers you can see.</em></h2>
-    <p>A conversation with your financial data. Questions become charts, breakdowns, and stories — grounded in your actual transactions.</p>
+    <h2 id="welcome-demo-title">From statement to understanding.<br><em>Watch how it works.</em></h2>
+    <p>A simple, privacy-guarded loop: drop your statement, converse in natural language, and see your financial life take shape.</p>
   </div>
 
-  <div class="chatMockup reveal">
-    <!-- Sidebar -->
-    <div class="chatMockSidebar">
-      <div class="chatMockSidebarHead">
-        <span class="eyebrow">CONVERSATIONS</span>
-        <button class="chatMockNewBtn" type="button" aria-label="New chat">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
-        </button>
+  <!-- Walkthrough Stepper -->
+  <div class="walkthroughStepper reveal" role="tablist" aria-label="Interactive app walkthrough">
+    <button class="walkthroughStepBtn active" type="button" data-step="0" role="tab" aria-selected="true" aria-controls="panel-upload">
+      <span class="stepBadge">01</span>
+      <div class="stepMeta">
+        <strong>Drop statement</strong>
+        <span>PDF, CSV, or photo</span>
       </div>
-      <div class="chatMockSessions">
-        <div class="chatMockSession active">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
-          <div>
-            <span class="chatMockSessionTitle">October spending</span>
-            <span class="chatMockSessionMeta">Just now</span>
-          </div>
-        </div>
-        <div class="chatMockSession">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
-          <div>
-            <span class="chatMockSessionTitle">September summary</span>
-            <span class="chatMockSessionMeta">2 days ago</span>
-          </div>
-        </div>
-        <div class="chatMockSession">
-          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
-          <div>
-            <span class="chatMockSessionTitle">Can I afford a trip?</span>
-            <span class="chatMockSessionMeta">5 days ago</span>
-          </div>
-        </div>
+      <div class="stepTrack"><div class="stepFill"></div></div>
+    </button>
+    <button class="walkthroughStepBtn" type="button" data-step="1" role="tab" aria-selected="false" aria-controls="panel-chat">
+      <span class="stepBadge">02</span>
+      <div class="stepMeta">
+        <strong>Ask in chat</strong>
+        <span>Stories &amp; inline charts</span>
       </div>
-      <div class="chatMockSidebarNote">
-        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-        Privacy layer active
+      <div class="stepTrack"><div class="stepFill"></div></div>
+    </button>
+    <button class="walkthroughStepBtn" type="button" data-step="2" role="tab" aria-selected="false" aria-controls="panel-privacy">
+      <span class="stepBadge">03</span>
+      <div class="stepMeta">
+        <strong>Privacy shield</strong>
+        <span>Masked before AI analysis</span>
+      </div>
+      <div class="stepTrack"><div class="stepFill"></div></div>
+    </button>
+  </div>
+
+  <!-- Walkthrough Container -->
+  <div class="walkthroughContainer reveal">
+    <!-- Panel 0: Upload -->
+    <div class="walkthroughPanel active" id="panel-upload" role="tabpanel">
+      <div class="uploadDemoCard">
+        <div class="uploadZoneDemo">
+          <div class="uploadFileDrop">
+            <div class="uploadFileIcon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M9 15h6"/><path d="M9 11h6"/></svg>
+            </div>
+            <div class="uploadFileInfo">
+              <span class="uploadFileName">rabobank_october_2026.csv</span>
+              <span class="uploadFileSize">48 KB · Bank Statement</span>
+            </div>
+            <span class="uploadReadyBadge">PARSED</span>
+          </div>
+
+          <div class="uploadStatusRow">
+            <div class="uploadStatusChip success">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+              Parsed locally in browser
+            </div>
+            <div class="uploadStatusChip">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              No bank credentials needed
+            </div>
+            <div class="uploadStatusChip">
+              <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              42 transactions extracted
+            </div>
+          </div>
+          <p class="uploadCaption">Drop any bank PDF, CSV, Excel, or statement screenshot. Your raw statement never leaves your device unshielded.</p>
+        </div>
+
+        <div class="uploadExtractedList">
+          <div class="uploadExtractedHeader">
+            <span>EXTRACTED TRANSACTIONS</span>
+            <span>AUTO-CATEGORIZED</span>
+          </div>
+          <div class="extractedItem">
+            <div class="extractedMeta">
+              <strong>Albert Heijn Overtoom</strong>
+              <small>Food &amp; Groceries · Oct 24</small>
+            </div>
+            <span class="extractedAmount">-€87.50</span>
+          </div>
+          <div class="extractedItem">
+            <div class="extractedMeta">
+              <strong>OV-Chipkaart Auto Reload</strong>
+              <small>Transport &amp; Travel · Oct 22</small>
+            </div>
+            <span class="extractedAmount">-€20.00</span>
+          </div>
+          <div class="extractedItem">
+            <div class="extractedMeta">
+              <strong>Swapfiets Subscription</strong>
+              <small>Recurring Mobility · Oct 18</small>
+            </div>
+            <span class="extractedAmount">-€19.50</span>
+          </div>
+          <div class="uploadCtaWrap">
+            <button class="stepNextBtn" type="button" data-next-step="1">
+              Step 02: Ask in chat
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Chat main area -->
-    <div class="chatMockMain">
-      <div class="chatMockHeader">
-        <div>
-          <h3>October spending</h3>
-          <p>Answers grounded in your transaction data</p>
-        </div>
-      </div>
-      <div class="chatMockThread" id="chat-demo-thread">
-        <!-- User message -->
-        <div class="chatMockMsg user">
-          <div class="chatMockBubble" id="demo-user-msg"></div>
-        </div>
-        <!-- Loading indicator (hidden initially) -->
-        <div class="chatMockMsg assistant" id="demo-loading" style="display:none">
-          <div class="chatMockLabel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><path d="m2 14 6-6 4 4 6-6"/><path d="M16 4h4v4"/></svg>
-            MBM
+    <!-- Panel 1: Chat -->
+    <div class="walkthroughPanel" id="panel-chat" role="tabpanel" style="display:none">
+      <div class="chatMockup">
+        <!-- Sidebar -->
+        <div class="chatMockSidebar">
+          <div class="chatMockSidebarHead">
+            <span class="eyebrow">CONVERSATIONS</span>
+            <button class="chatMockNewBtn" type="button" aria-label="New chat">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+            </button>
           </div>
-          <div class="chatMockContent">
-            <div class="typingDots"><span></span><span></span><span></span></div>
-          </div>
-        </div>
-        <!-- AI response (hidden initially) -->
-        <div class="chatMockMsg assistant" id="demo-ai-response" style="display:none">
-          <div class="chatMockLabel">
-            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><path d="m2 14 6-6 4 4 6-6"/><path d="M16 4h4v4"/></svg>
-            MBM
-          </div>
-          <div class="chatMockContent" id="demo-ai-text"></div>
-          <!-- Inline chart -->
-          <div class="chatMockChart" id="demo-chart" style="display:none">
-            <div class="chatMockChartTitle">Food vs Transport — October</div>
-            <div class="chatMockBar">
-              <span class="chatMockBarLabel">Food &amp; Groceries</span>
-              <div class="chatMockBarTrack">
-                <div class="chatMockBarFill" data-width="82" data-value="€342"></div>
+          <div class="chatMockSessions">
+            <div class="chatMockSession active">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+              <div>
+                <span class="chatMockSessionTitle">October spending</span>
+                <span class="chatMockSessionMeta">Just now</span>
               </div>
             </div>
-            <div class="chatMockBar">
-              <span class="chatMockBarLabel">Transport &amp; Travel</span>
-              <div class="chatMockBarTrack">
-                <div class="chatMockBarFill alt" data-width="31" data-value="€127"></div>
+            <div class="chatMockSession">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+              <div>
+                <span class="chatMockSessionTitle">September summary</span>
+                <span class="chatMockSessionMeta">2 days ago</span>
               </div>
             </div>
-            <div class="chatMockChartLegend">
-              <span><i class="incomeKey"></i>Food &amp; Groceries</span>
-              <span><i class="spendingKey"></i>Transport &amp; Travel</span>
+            <div class="chatMockSession">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.992 16.342a2 2 0 0 1 .094 1.167l-1.065 3.29a1 1 0 0 0 1.236 1.168l3.413-.998a2 2 0 0 1 1.099.092 10 10 0 1 0-4.777-4.719"/></svg>
+              <div>
+                <span class="chatMockSessionTitle">Can I afford a trip?</span>
+                <span class="chatMockSessionMeta">5 days ago</span>
+              </div>
             </div>
           </div>
-          <!-- Suggestions -->
-          <div class="chatMockSuggestions" id="demo-suggestions" style="display:none">
-            <button type="button">Compare with September</button>
-            <button type="button">Show my top 5 categories</button>
+          <div class="chatMockSidebarNote">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            Privacy layer active
+          </div>
+        </div>
+
+        <!-- Chat main area -->
+        <div class="chatMockMain">
+          <div class="chatMockHeader">
+            <div>
+              <h3>October spending</h3>
+              <p>Answers grounded in your transaction data</p>
+            </div>
+          </div>
+          <div class="chatMockThread" id="chat-demo-thread">
+            <!-- User message -->
+            <div class="chatMockMsg user">
+              <div class="chatMockBubble" id="demo-user-msg"></div>
+            </div>
+            <!-- Loading indicator -->
+            <div class="chatMockMsg assistant" id="demo-loading" style="display:none">
+              <div class="chatMockLabel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><path d="m2 14 6-6 4 4 6-6"/><path d="M16 4h4v4"/></svg>
+                MBM
+              </div>
+              <div class="chatMockContent">
+                <div class="typingDots"><span></span><span></span><span></span></div>
+              </div>
+            </div>
+            <!-- AI response -->
+            <div class="chatMockMsg assistant" id="demo-ai-response" style="display:none">
+              <div class="chatMockLabel">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 8V4H8"/><path d="m2 14 6-6 4 4 6-6"/><path d="M16 4h4v4"/></svg>
+                MBM
+              </div>
+              <div class="chatMockContent" id="demo-ai-text"></div>
+              <!-- Inline chart -->
+              <div class="chatMockChart" id="demo-chart" style="display:none">
+                <div class="chatMockChartTitle">Food vs Transport — October</div>
+                <div class="chatMockBar">
+                  <span class="chatMockBarLabel">Food &amp; Groceries</span>
+                  <div class="chatMockBarTrack">
+                    <div class="chatMockBarFill" data-width="82" data-value="€342"></div>
+                  </div>
+                </div>
+                <div class="chatMockBar">
+                  <span class="chatMockBarLabel">Transport &amp; Travel</span>
+                  <div class="chatMockBarTrack">
+                    <div class="chatMockBarFill alt" data-width="31" data-value="€127"></div>
+                  </div>
+                </div>
+                <div class="chatMockChartLegend">
+                  <span><i class="incomeKey"></i>Food &amp; Groceries</span>
+                  <span><i class="spendingKey"></i>Transport &amp; Travel</span>
+                </div>
+              </div>
+              <!-- Suggestions -->
+              <div class="chatMockSuggestions" id="demo-suggestions" style="display:none">
+                <button type="button">Compare with September</button>
+                <button type="button">Show top 5 categories</button>
+              </div>
+            </div>
+          </div>
+          <!-- Composer -->
+          <div class="chatMockComposer">
+            <div class="chatMockComposerMeta">
+              <span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                Privacy layer active · data masked before analysis
+              </span>
+            </div>
+            <div class="chatMockInputWrap">
+              <span class="chatMockInputPlaceholder">Ask about your finances…</span>
+              <div class="chatMockSendBtn" aria-hidden="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <!-- Composer -->
-      <div class="chatMockComposer">
-        <div class="chatMockComposerMeta">
-          <span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-            Privacy layer active · data masked before analysis
-          </span>
-        </div>
-        <div class="chatMockInputWrap">
-          <span class="chatMockInputPlaceholder">Ask about your finances…</span>
-          <div class="chatMockSendBtn" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </div>
+
+    <!-- Panel 2: Privacy -->
+    <div class="walkthroughPanel" id="panel-privacy" role="tabpanel" style="display:none">
+      <div class="walkthroughPrivacyCard">
+        <div class="walkthroughPrivacyHead">
+          <div>
+            <span class="eyebrow">AUTOMATIC PSEUDONYMIZATION</span>
+            <h3>How your data stays protected</h3>
           </div>
+          <span class="privacyScaleTag">SESSION FACTOR: 2×</span>
+        </div>
+        <div class="walkthroughPrivacyPreview">
+          <div class="previewSide previewHuman">
+            <span class="sideBadge">WHAT YOU SEE (REAL)</span>
+            <div class="previewRow"><span>Account</span><strong>NL91 ABNA 0417 1643 00</strong></div>
+            <div class="previewRow"><span>Merchant</span><strong>Albert Heijn Overtoom</strong></div>
+            <div class="previewRow"><span>Amount</span><strong>€87.50</strong></div>
+            <div class="previewRow"><span>Category</span><strong>Food &amp; Groceries</strong></div>
+          </div>
+          <div class="previewScanner">
+            <div class="scannerShield">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+            <div class="scannerBeam"></div>
+          </div>
+          <div class="previewSide previewAI">
+            <span class="sideBadge ai">WHAT AI SEES (TRANSFORMED)</span>
+            <div class="previewRow"><span>Account</span><code class="scrambleText" id="walkthrough-mask-iban">IBAN..4300</code></div>
+            <div class="previewRow"><span>Merchant</span><code class="scrambleText" id="walkthrough-mask-merchant">Merchant_1</code></div>
+            <div class="previewRow"><span>Amount</span><code class="scrambleText" id="walkthrough-mask-amount">€175.00</code></div>
+            <div class="previewRow"><span>Category</span><code>Food &amp; Groceries ✓</code></div>
+          </div>
+        </div>
+        <div class="walkthroughPrivacyFoot">
+          <p>Aliases and scaled figures are reversed before replies reach your screen. The AI sees pattern semantics without your identity.</p>
+          <a class="textLink" href="#welcome-privacy">Explore detailed privacy architecture <span aria-hidden="true">↓</span></a>
         </div>
       </div>
     </div>

@@ -11,7 +11,64 @@
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* ═══════════════════════════════════════════
-     1. HERO MONTH PICKER & FIGURE
+     UTILITY: NUMERIC COUNT-UP & TEXT SCRAMBLE
+     ═══════════════════════════════════════════ */
+  function countNumber(el, start, end, duration = 800) {
+    if (!el) return;
+    if (isReducedMotion()) {
+      el.textContent = money(end);
+      return;
+    }
+    const startTime = performance.now();
+    function tick(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      // Ease out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
+      const current = Math.round(start + (end - start) * ease);
+      el.textContent = money(current);
+      if (progress < 1) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = money(end);
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  const CIPHER_CHARS = 'ABCDEF0123456789#@$%&*!?';
+  function scrambleText(element, targetText, duration = 650) {
+    if (!element) return;
+    if (isReducedMotion()) {
+      element.textContent = targetText;
+      return;
+    }
+    const startTime = performance.now();
+    const length = targetText.length;
+    function update(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const fixedChars = Math.floor(progress * length);
+      let output = targetText.slice(0, fixedChars);
+      for (let i = fixedChars; i < length; i++) {
+        if (targetText[i] === ' ' || targetText[i] === '€' || targetText[i] === '.') {
+          output += targetText[i];
+        } else {
+          output += CIPHER_CHARS.charAt(Math.floor(Math.random() * CIPHER_CHARS.length));
+        }
+      }
+      element.textContent = output;
+      if (progress < 1) {
+        requestAnimationFrame(update);
+      } else {
+        element.textContent = targetText;
+      }
+    }
+    requestAnimationFrame(update);
+  }
+
+  /* ═══════════════════════════════════════════
+     1. HERO MONTH PICKER & FIGURE MICRO-ANIMATIONS
      ═══════════════════════════════════════════ */
   const examples = [
     { month: 'June', income: 3200, spending: 2240, story: 'A little more breathing room.', note: 'Everyday spending left €960 available for savings and plans.' },
@@ -22,11 +79,33 @@
     { month: 'November', income: 3200, spending: 2860, story: 'A new home. A different kind of month.', note: 'Shopping rose with purchases for a move. A life change, with context—not just a spending spike.' },
   ];
 
+  let currentMetrics = [3200, 2860, 340];
   const figure = document.querySelector('.heroFigure');
   if (figure) {
     const spendingChart = figure.querySelector('svg.chart');
     const monthGroups = spendingChart ? Array.from(spendingChart.querySelectorAll('g')).slice(-6) : [];
     const monthButtons = Array.from(figure.querySelectorAll('.monthPicker button'));
+
+    // Scroll trigger for initial hero bar chart entrance and number count-up
+    if ('IntersectionObserver' in window) {
+      let heroAnimated = false;
+      const heroObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !heroAnimated) {
+            heroAnimated = true;
+            figure.classList.add('chart-animated');
+            const metricsEls = figure.querySelectorAll('.metrics strong');
+            if (metricsEls.length >= 3) {
+              countNumber(metricsEls[0], 0, currentMetrics[0], 900);
+              countNumber(metricsEls[1], 0, currentMetrics[1], 900);
+              countNumber(metricsEls[2], 0, currentMetrics[2], 900);
+            }
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      heroObserver.observe(figure);
+    }
 
     monthButtons.forEach((button, index) => {
       button.addEventListener('click', () => {
@@ -46,11 +125,17 @@
         if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / THE BIGGER PICTURE`;
         const titleEl = figure.querySelector('.figureTitle h2');
         if (titleEl) titleEl.textContent = index === 5 ? 'A month of making space.' : example.story;
-        const metrics = figure.querySelectorAll('.metrics strong');
-        if (metrics.length >= 3) {
-          [example.income, example.spending, example.income - example.spending]
-            .forEach((value, i) => { metrics[i].textContent = money(value); });
+
+        // Smoothly animate count-up from old values to new values
+        const metricsEls = figure.querySelectorAll('.metrics strong');
+        if (metricsEls.length >= 3) {
+          const newValues = [example.income, example.spending, example.income - example.spending];
+          countNumber(metricsEls[0], currentMetrics[0], newValues[0], 500);
+          countNumber(metricsEls[1], currentMetrics[1], newValues[1], 500);
+          countNumber(metricsEls[2], currentMetrics[2], newValues[2], 500);
+          currentMetrics = newValues;
         }
+
         const noteStrong = figure.querySelector('.storyNote strong');
         if (noteStrong) noteStrong.textContent = example.story;
         const noteP = figure.querySelector('.storyNote p');
@@ -64,12 +149,28 @@
   }
 
   /* ═══════════════════════════════════════════
-     2. SAVINGS SCENARIO SLIDER
+     2. SAVINGS SCENARIO SLIDER & DRAW-IN ANIMATION
      ═══════════════════════════════════════════ */
   const slider = document.getElementById('welcome-contribution');
   const savingsCard = document.querySelector('.savingsCard');
   if (slider && savingsCard) {
     const savingsChart = savingsCard.querySelector('svg.chart');
+
+    // Trigger stroke draw-in animation on scroll
+    if ('IntersectionObserver' in window) {
+      let savingsAnimated = false;
+      const savingsObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && !savingsAnimated) {
+            savingsAnimated = true;
+            savingsCard.classList.add('chart-animated');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      savingsObserver.observe(savingsCard);
+    }
+
     function updateSavings() {
       const contribution = Number(slider.value);
       const y = (amount) => 190 - (amount / 3000) * 160;
@@ -119,9 +220,137 @@
   }
 
   /* ═══════════════════════════════════════════
-     4. INTERACTIVE CHAT DEMO (Auto-play on scroll)
+     4. WALKTHROUGH CONTROLLER & AUTO-PLAY ON SCROLL
      ═══════════════════════════════════════════ */
-  const chatMockup = document.querySelector('.chatMockup');
+  const walkthroughSection = document.getElementById('welcome-demo');
+  const stepButtons = Array.from(document.querySelectorAll('.walkthroughStepBtn'));
+  const panels = [
+    document.getElementById('panel-upload'),
+    document.getElementById('panel-chat'),
+    document.getElementById('panel-privacy')
+  ];
+  const nextStepBtns = Array.from(document.querySelectorAll('[data-next-step]'));
+
+  let activeWalkthroughStep = 0;
+  let autoPlayActive = false;
+  let autoPlayCancelled = false;
+  let stepTimer = null;
+  let progressRaf = null;
+
+  const STEP_DURATIONS = [4000, 7000, 5000]; // Duration per step in ms
+
+  function setWalkthroughStep(index, isAuto = false) {
+    if (!isAuto) {
+      autoPlayCancelled = true;
+      cancelAnimationFrame(progressRaf);
+      clearTimeout(stepTimer);
+      // Reset all progress fills
+      stepButtons.forEach((btn) => {
+        const fill = btn.querySelector('.stepFill');
+        if (fill) fill.style.width = '0%';
+      });
+    }
+
+    activeWalkthroughStep = index;
+
+    // Update buttons
+    stepButtons.forEach((btn, i) => {
+      const isActive = i === index;
+      btn.classList.toggle('active', isActive);
+      btn.setAttribute('aria-selected', String(isActive));
+    });
+
+    // Update panels
+    panels.forEach((panel, i) => {
+      if (!panel) return;
+      const isCurrent = i === index;
+      panel.style.display = isCurrent ? 'block' : 'none';
+      panel.classList.toggle('active', isCurrent);
+      panel.setAttribute('aria-hidden', String(!isCurrent));
+    });
+
+    // Specific triggers per panel
+    if (index === 1) {
+      playChatScenario(0);
+    } else if (index === 2) {
+      // Trigger scramble on privacy preview
+      const ibanEl = document.getElementById('walkthrough-mask-iban');
+      const merchantEl = document.getElementById('walkthrough-mask-merchant');
+      const amountEl = document.getElementById('walkthrough-mask-amount');
+      if (ibanEl) scrambleText(ibanEl, 'IBAN..4300', 650);
+      if (merchantEl) scrambleText(merchantEl, 'Merchant_1', 600);
+      if (amountEl) scrambleText(amountEl, '€175.00', 500);
+    }
+  }
+
+  function startStepProgress(stepIndex) {
+    if (autoPlayCancelled || isReducedMotion()) return;
+    const btn = stepButtons[stepIndex];
+    if (!btn) return;
+    const fill = btn.querySelector('.stepFill');
+    if (!fill) return;
+
+    // Reset fills of all buttons
+    stepButtons.forEach((b, i) => {
+      const f = b.querySelector('.stepFill');
+      if (f) f.style.width = i < stepIndex ? '100%' : '0%';
+    });
+
+    const duration = STEP_DURATIONS[stepIndex] || 5000;
+    const startTime = performance.now();
+
+    function stepTick(now) {
+      if (autoPlayCancelled) return;
+      const elapsed = now - startTime;
+      const pct = Math.min((elapsed / duration) * 100, 100);
+      fill.style.width = `${pct}%`;
+
+      if (elapsed < duration) {
+        progressRaf = requestAnimationFrame(stepTick);
+      } else {
+        fill.style.width = '100%';
+        const next = (stepIndex + 1) % 3;
+        setWalkthroughStep(next, true);
+        startStepProgress(next);
+      }
+    }
+    progressRaf = requestAnimationFrame(stepTick);
+  }
+
+  stepButtons.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const stepIdx = parseInt(btn.dataset.step, 10) || 0;
+      setWalkthroughStep(stepIdx, false);
+    });
+  });
+
+  nextStepBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const nextIdx = parseInt(btn.dataset.nextStep, 10) || 1;
+      setWalkthroughStep(nextIdx, false);
+    });
+  });
+
+  // Auto-play walkthrough when scrolled into view
+  if (walkthroughSection && 'IntersectionObserver' in window) {
+    let observedOnce = false;
+    const walkthroughObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && !observedOnce) {
+          observedOnce = true;
+          autoPlayActive = true;
+          setWalkthroughStep(0, true);
+          startStepProgress(0);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.25 });
+    walkthroughObserver.observe(walkthroughSection);
+  }
+
+  /* ═══════════════════════════════════════════
+     5. CHAT MOCKUP SCENARIOS & TYPING
+     ═══════════════════════════════════════════ */
   const userMsgEl = document.getElementById('demo-user-msg');
   const loadingEl = document.getElementById('demo-loading');
   const aiResponseEl = document.getElementById('demo-ai-response');
@@ -131,7 +360,6 @@
   const sessionItems = Array.from(document.querySelectorAll('.chatMockSession'));
   const newChatBtn = document.querySelector('.chatMockNewBtn');
 
-  // Grounded demo scenarios matching actual chat queries
   const scenarios = [
     {
       title: 'October spending',
@@ -180,11 +408,10 @@
     }
   ];
 
-  let currentScenarioIndex = 0;
-  let isPlaying = false;
-  let animationToken = 0;
+  let isChatPlaying = false;
+  let chatToken = 0;
 
-  function typeText(element, text, speed = 24, token) {
+  function typeChatText(element, text, speed = 20, token) {
     return new Promise((resolve) => {
       if (isReducedMotion()) {
         element.textContent = text;
@@ -193,7 +420,7 @@
       let i = 0;
       element.textContent = '';
       const timer = setInterval(() => {
-        if (token !== animationToken) {
+        if (token !== chatToken) {
           clearInterval(timer);
           return resolve();
         }
@@ -215,25 +442,21 @@
     });
   }
 
-  async function playScenario(index, manual = false) {
-    if (isPlaying && !manual) return;
-    isPlaying = true;
-    const token = ++animationToken;
-    currentScenarioIndex = index;
+  async function playChatScenario(index, manual = false) {
+    if (isChatPlaying && !manual) return;
+    isChatPlaying = true;
+    const token = ++chatToken;
     const data = scenarios[index] || scenarios[0];
 
-    // Update active sidebar session
     sessionItems.forEach((session, i) => {
       session.classList.toggle('active', i === index);
     });
 
-    // Update header
     const headerTitle = document.querySelector('.chatMockHeader h3');
     const headerSub = document.querySelector('.chatMockHeader p');
     if (headerTitle) headerTitle.textContent = data.title;
     if (headerSub) headerSub.textContent = data.meta;
 
-    // Reset thread elements
     if (userMsgEl) userMsgEl.textContent = '';
     if (loadingEl) loadingEl.style.display = 'none';
     if (aiResponseEl) aiResponseEl.style.display = 'none';
@@ -246,18 +469,18 @@
 
     // Step 1: Type user question
     if (userMsgEl) {
-      await typeText(userMsgEl, data.userQuestion, 22, token);
-      if (token !== animationToken) return;
+      await typeChatText(userMsgEl, data.userQuestion, 20, token);
+      if (token !== chatToken) return;
     }
 
-    // Step 2: Show loading indicator
-    await wait(300, token);
-    if (token !== animationToken) return;
+    // Step 2: Show loading dots
+    await wait(280, token);
+    if (token !== chatToken) return;
     if (loadingEl) loadingEl.style.display = 'flex';
 
-    // Step 3: Show AI response
-    await wait(750, token);
-    if (token !== animationToken) return;
+    // Step 3: Reveal AI message
+    await wait(700, token);
+    if (token !== chatToken) return;
     if (loadingEl) loadingEl.style.display = 'none';
     if (aiResponseEl) aiResponseEl.style.display = 'block';
 
@@ -270,19 +493,19 @@
           pEl.innerHTML = p;
           pEl.style.opacity = '0';
           pEl.style.transform = 'translateY(6px)';
-          pEl.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+          pEl.style.transition = 'opacity 0.35s ease, transform 0.35s ease';
           aiTextEl.appendChild(pEl);
-          await wait(80, token);
+          await wait(60, token);
           pEl.style.opacity = '1';
           pEl.style.transform = 'translateY(0)';
-          await wait(320, token);
+          await wait(280, token);
         }
       }
     }
 
     // Step 4: Show inline chart and animate bars
     await wait(200, token);
-    if (token !== animationToken) return;
+    if (token !== chatToken) return;
     if (demoChartEl) {
       demoChartEl.style.display = 'block';
       const chartTitleEl = demoChartEl.querySelector('.chatMockChartTitle');
@@ -302,18 +525,18 @@
           fillEl.setAttribute('data-width', String(barData.width));
           fillEl.classList.remove('animated');
           setTimeout(() => {
-            if (token === animationToken) {
+            if (token === chatToken) {
               fillEl.style.width = `${barData.width}%`;
               fillEl.classList.add('animated');
             }
-          }, 150);
+          }, 120);
         }
       });
     }
 
-    // Step 5: Show suggestion chips
-    await wait(450, token);
-    if (token !== animationToken) return;
+    // Step 5: Suggestions
+    await wait(350, token);
+    if (token !== chatToken) return;
     if (demoSuggestionsEl) {
       demoSuggestionsEl.innerHTML = '';
       data.suggestions.forEach((text) => {
@@ -321,60 +544,42 @@
         btn.type = 'button';
         btn.textContent = text;
         btn.addEventListener('click', () => {
-          if (text.includes('September')) playScenario(1, true);
-          else if (text.includes('trip') || text.includes('afford')) playScenario(2, true);
-          else playScenario(0, true);
+          autoPlayCancelled = true;
+          if (text.includes('September')) playChatScenario(1, true);
+          else if (text.includes('trip') || text.includes('afford')) playChatScenario(2, true);
+          else playChatScenario(0, true);
         });
         demoSuggestionsEl.appendChild(btn);
       });
       demoSuggestionsEl.style.display = 'flex';
     }
 
-    isPlaying = false;
+    isChatPlaying = false;
   }
 
-  // Sidebar session clicks
   sessionItems.forEach((session, index) => {
     session.addEventListener('click', () => {
-      playScenario(index, true);
+      autoPlayCancelled = true;
+      playChatScenario(index, true);
     });
   });
 
-  // "New chat" button
   if (newChatBtn) {
     newChatBtn.addEventListener('click', () => {
-      playScenario(0, true);
+      autoPlayCancelled = true;
+      playChatScenario(0, true);
     });
   }
 
-  // Auto-play chat demo when scrolled into view
-  if (chatMockup && 'IntersectionObserver' in window) {
-    let playedOnce = false;
-    const chatObserver = new IntersectionObserver((entries, observer) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && !playedOnce) {
-          playedOnce = true;
-          playScenario(0);
-          observer.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.25 });
-    chatObserver.observe(chatMockup);
-  } else if (chatMockup) {
-    playScenario(0);
-  }
-
   /* ═══════════════════════════════════════════
-     5. PRIVACY SECTION ANIMATION & HOVER LINKING
+     6. SECTION 04: PRIVACY COMPARISON & SCRAMBLE
      ═══════════════════════════════════════════ */
   const privacySplit = document.getElementById('privacy-split');
   const shield = document.getElementById('privacy-shield');
   const arrows = Array.from(document.querySelectorAll('.privacyArrow'));
-  const maskedElements = [
-    document.getElementById('mask-iban'),
-    document.getElementById('mask-merchant'),
-    document.getElementById('mask-amount'),
-  ].filter(Boolean);
+  const maskIban = document.getElementById('mask-iban');
+  const maskMerchant = document.getElementById('mask-merchant');
+  const maskAmount = document.getElementById('mask-amount');
 
   if (privacySplit && 'IntersectionObserver' in window) {
     let animated = false;
@@ -386,13 +591,31 @@
           arrows.forEach((arr, i) => {
             setTimeout(() => {
               arr.classList.add('visible');
-            }, 180 * (i + 1));
+            }, 160 * (i + 1));
           });
-          maskedElements.forEach((el, i) => {
-            setTimeout(() => {
-              el.classList.add('highlight');
-            }, 300 + 200 * i);
-          });
+
+          // Animate scramble and morphing
+          setTimeout(() => {
+            if (maskIban) {
+              maskIban.classList.add('highlight');
+              scrambleText(maskIban, 'IBAN..4300', 700);
+            }
+          }, 250);
+
+          setTimeout(() => {
+            if (maskMerchant) {
+              maskMerchant.classList.add('highlight');
+              scrambleText(maskMerchant, 'Merchant_1', 650);
+            }
+          }, 450);
+
+          setTimeout(() => {
+            if (maskAmount) {
+              maskAmount.classList.add('highlight');
+              scrambleText(maskAmount, '€175.00', 500);
+            }
+          }, 650);
+
           observer.unobserve(entry.target);
         }
       });
@@ -400,7 +623,6 @@
     privacyObserver.observe(privacySplit);
   } else {
     arrows.forEach((arr) => arr.classList.add('visible'));
-    maskedElements.forEach((el) => el.classList.add('highlight'));
   }
 
   // Side-by-side hover linking
@@ -424,7 +646,7 @@
   });
 
   /* ═══════════════════════════════════════════
-     6. WAITLIST SIGNUP FORM
+     7. WAITLIST SIGNUP FORM
      ═══════════════════════════════════════════ */
   const form = document.getElementById('waitlist-form');
   const nameInput = document.getElementById('name-input');
