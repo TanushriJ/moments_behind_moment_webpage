@@ -68,26 +68,20 @@
   }
 
   /* ═══════════════════════════════════════════
-     1. HERO MONTH PICKER & HERO TOGGLE
+     1. HERO 5-MONTH SPENDING OVERVIEW
      ═══════════════════════════════════════════ */
   const examples = [
-    {
-      month: 'June',
-      income: 3200,
-      spending: 2240,
-      story: 'Baseline spending was €2,240 in June: rent and daily groceries formed 82% of outgoings with zero spikes.'
-    },
     {
       month: 'July',
       income: 3200,
       spending: 2410,
-      story: 'Spending increased by €170 in July: summer holiday travel (+€230) was offset by lower utilities (-€60).'
+      story: 'Spending was €2,410 in July: summer travel (+€230) was balanced by lower seasonal utilities.'
     },
     {
       month: 'August',
       income: 3200,
       spending: 2290,
-      story: 'Spending dropped by €120 in August: dining out and leisure expenses dropped back to your regular baseline.'
+      story: 'Spending dropped to €2,290 in August: dining out and leisure expenses returned to your baseline.'
     },
     {
       month: 'September',
@@ -99,22 +93,21 @@
       month: 'October',
       income: 3200,
       spending: 2350,
-      story: 'Spending decreased by €180 in October: annual subscriptions ended and groceries returned to your €620 monthly average.'
+      story: 'Spending decreased by €180 in October: annual subscriptions ended and groceries returned to average.'
     },
     {
       month: 'November',
       income: 3200,
       spending: 2860,
       story: 'Spending increased by €510 in November: apartment move setup (+€340) and furniture purchases (+€170) drove the rise.'
-    },
+    }
   ];
 
   let currentMetrics = [3200, 2530, 670];
   const figure = document.querySelector('.heroFigure');
   if (figure) {
     const spendingChart = figure.querySelector('svg.chart');
-    const monthGroups = spendingChart ? Array.from(spendingChart.querySelectorAll('g')).slice(-6) : [];
-    const monthButtons = Array.from(figure.querySelectorAll('.monthPicker button'));
+    const monthCols = Array.from(figure.querySelectorAll('.monthCol'));
 
     // Scroll trigger for initial hero bar chart entrance and number count-up
     if ('IntersectionObserver' in window) {
@@ -137,248 +130,63 @@
       heroObserver.observe(figure);
     }
 
-    monthButtons.forEach((button, index) => {
-      button.addEventListener('click', () => {
-        const example = examples[index];
-        monthButtons.forEach((other, i) => other.setAttribute('aria-pressed', String(i === index)));
-        monthGroups.forEach((group, i) => {
-          group.setAttribute('opacity', i === index ? '1' : '0.55');
-          group.querySelector('.chartHighlight')?.remove();
-          if (i === index) {
-            const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-            Object.entries({ x: 57 + i * 76, y: 13, width: 65, height: 188, rx: 7, class: 'chartHighlight' })
-              .forEach(([key, value]) => highlight.setAttribute(key, String(value)));
-            group.prepend(highlight);
-          }
-        });
-        const monthLabel = document.getElementById('hero-month-label') || figure.querySelector('.monthLabel');
-        if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / €${example.spending.toLocaleString()} SPENT`;
-        const titleEl = document.getElementById('hero-month-title') || figure.querySelector('.figureTitle h2');
-        if (titleEl) titleEl.textContent = example.story;
+    const highlightXPositions = [61, 149, 237, 325, 413];
 
-        // Smoothly animate count-up from old values to new values
-        const metricsEls = figure.querySelectorAll('.metrics strong');
-        if (metricsEls.length >= 3) {
-          const newValues = [example.income, example.spending, example.income - example.spending];
-          countNumber(metricsEls[0], currentMetrics[0], newValues[0], 500);
-          countNumber(metricsEls[1], currentMetrics[1], newValues[1], 500);
-          countNumber(metricsEls[2], currentMetrics[2], newValues[2], 500);
-          currentMetrics = newValues;
+    function selectMonth(index) {
+      if (index < 0 || index >= examples.length) return;
+      const example = examples[index];
+      monthCols.forEach((col, i) => {
+        col.classList.toggle('active', i === index);
+        col.setAttribute('opacity', i === index ? '1' : '0.45');
+        col.querySelector('.chartHighlight')?.remove();
+        const label = col.querySelector('.axisLabel');
+        if (label) {
+          label.classList.toggle('monthActiveLabel', i === index);
         }
+        if (i === index) {
+          const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+          Object.entries({
+            x: highlightXPositions[i],
+            y: 16,
+            width: 66,
+            height: 190,
+            rx: 8,
+            class: 'chartHighlight'
+          }).forEach(([key, value]) => highlight.setAttribute(key, String(value)));
+          col.prepend(highlight);
+        }
+      });
 
-        const desc = spendingChart?.querySelector('desc');
-        if (desc) {
-          desc.textContent = `Fictional income and spending from June to November. ${example.month} is highlighted: income ${money(example.income)}, spending ${money(example.spending)}, left over ${money(example.income - example.spending)}.`;
+      const monthLabel = document.getElementById('hero-month-label') || figure.querySelector('.monthLabel');
+      if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / €${example.spending.toLocaleString()} SPENT`;
+      const titleEl = document.getElementById('hero-month-title') || figure.querySelector('.figureTitle h2');
+      if (titleEl) titleEl.textContent = example.story;
+
+      // Smoothly animate count-up from old values to new values
+      const metricsEls = figure.querySelectorAll('.metrics strong');
+      if (metricsEls.length >= 3) {
+        const newValues = [example.income, example.spending, example.income - example.spending];
+        countNumber(metricsEls[0], currentMetrics[0], newValues[0], 500);
+        countNumber(metricsEls[1], currentMetrics[1], newValues[1], 500);
+        countNumber(metricsEls[2], currentMetrics[2], newValues[2], 500);
+        currentMetrics = newValues;
+      }
+
+      const desc = spendingChart?.querySelector('desc');
+      if (desc) {
+        desc.textContent = `Fictional income and spending from July to November. ${example.month} is highlighted: income ${money(example.income)}, spending ${money(example.spending)}, left over ${money(example.income - example.spending)}.`;
+      }
+    }
+
+    monthCols.forEach((col, index) => {
+      col.addEventListener('click', () => selectMonth(index));
+      col.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          selectMonth(index);
         }
       });
     });
-
-    // ── Hero Mode Toggle: Insights vs Chat ──
-    const heroTabInsights = document.getElementById('hero-tab-insights');
-    const heroTabClarity = document.getElementById('hero-tab-clarity');
-    const heroPanelInsights = document.getElementById('hero-panel-insights');
-    const heroPanelClarity = document.getElementById('hero-panel-clarity');
-    const heroTagBadge = document.getElementById('hero-tag-badge');
-
-    function setHeroMode(mode) {
-      const isInsights = mode === 'insights';
-      if (heroTabInsights) {
-        heroTabInsights.classList.toggle('active', isInsights);
-        heroTabInsights.setAttribute('aria-selected', String(isInsights));
-      }
-      if (heroTabClarity) {
-        heroTabClarity.classList.toggle('active', !isInsights);
-        heroTabClarity.setAttribute('aria-selected', String(!isInsights));
-      }
-      if (heroPanelInsights) {
-        heroPanelInsights.hidden = !isInsights;
-      }
-      if (heroPanelClarity) {
-        heroPanelClarity.hidden = isInsights;
-        if (!isInsights && !chatSimStarted) {
-          startChatSimulation();
-        }
-      }
-      if (heroTagBadge) {
-        heroTagBadge.textContent = 'EXAMPLE DATA';
-      }
-    }
-
-    if (heroTabInsights && heroTabClarity) {
-      heroTabInsights.addEventListener('click', () => setHeroMode('insights'));
-      heroTabClarity.addEventListener('click', () => setHeroMode('clarity'));
-    }
-
-    // ── Chat Panel: Autonomous Simulated Conversation ──
-    const chatQuestionsData = [
-      {
-        question: 'What subscriptions am I still paying for?',
-        metric: '5 active · €142/mo',
-        text: 'Found 5 active monthly subscriptions totaling €142/month: Gym membership (€49.00), Software tools (€54.00), Streaming (€28.00), and Spotify (€10.99). You haven\'t used the gym in 6 weeks.',
-        viz: [
-          { label: 'Software tools', amount: '€54.00', width: '38%', color: 'var(--color-accent)' },
-          { label: 'Gym membership', amount: '€49.00', width: '35%', color: 'var(--color-clay)' },
-          { label: 'Media & Spotify', amount: '€39.00', width: '27%', color: '#6b8f71' }
-        ]
-      },
-      {
-        question: 'Why did I spend more this month?',
-        metric: '+€240 vs August',
-        text: 'Your spending increased by €240 in September. Recurring software renewals (+€130) and back-to-school groceries (+€110) drove the difference; core rent and utilities stayed flat.',
-        viz: [
-          { label: 'Software renewals', amount: '+€130', width: '54%', color: 'var(--color-clay)' },
-          { label: 'Groceries & Food', amount: '+€110', width: '46%', color: 'var(--color-accent)' },
-          { label: 'Rent & Utilities', amount: 'Flat (€0)', width: '6%', color: '#6b8f71' }
-        ]
-      },
-      {
-        question: 'What does my spending look if I do a monthly dance class for 30 euros?',
-        metric: '€640 leftover cushion',
-        text: 'Adding €30/month for a dance class leaves you with €640 in monthly cushion (down from €670). You can easily absorb this within your existing €3,200 monthly income.',
-        viz: [
-          { label: 'Current leftover', amount: '€670', width: '67%', color: 'var(--color-accent)' },
-          { label: 'Dance class', amount: '-€30', width: '10%', color: 'var(--color-clay)' },
-          { label: 'Projected cushion', amount: '€640', width: '64%', color: '#6b8f71' }
-        ]
-      }
-    ];
-
-    const heroChatThread = document.getElementById('hero-chat-thread');
-    const heroChatInput = document.getElementById('hero-chat-input');
-    const heroChatSendBtn = document.getElementById('hero-chat-send-btn');
-    const heroChatPauseBtn = document.getElementById('hero-chat-pause-btn');
-    const heroChatPauseText = document.getElementById('hero-chat-pause-text');
-
-    let chatSimStarted = false;
-    let chatSimIndex = 0;
-    let isChatPaused = false;
-    let chatTimer = null;
-
-    if (heroChatPauseBtn) {
-      heroChatPauseBtn.addEventListener('click', () => {
-        isChatPaused = !isChatPaused;
-        const svgEl = heroChatPauseBtn.querySelector('.pauseIconSvg');
-        if (isChatPaused) {
-          if (heroChatPauseText) heroChatPauseText.textContent = 'Resume';
-          if (svgEl) svgEl.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
-        } else {
-          if (heroChatPauseText) heroChatPauseText.textContent = 'Pause';
-          if (svgEl) svgEl.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
-          playNextChatQuestion();
-        }
-      });
-    }
-
-    function typeMessageIntoInput(text, onComplete) {
-      if (!heroChatInput) {
-        onComplete();
-        return;
-      }
-      heroChatInput.value = '';
-      let charIdx = 0;
-      const typeInterval = setInterval(() => {
-        if (charIdx < text.length) {
-          heroChatInput.value += text[charIdx];
-          charIdx++;
-        } else {
-          clearInterval(typeInterval);
-          if (heroChatSendBtn) heroChatSendBtn.classList.add('active');
-          setTimeout(() => {
-            if (heroChatSendBtn) heroChatSendBtn.classList.remove('active');
-            heroChatInput.value = '';
-            onComplete();
-          }, 350);
-        }
-      }, 25);
-    }
-
-    function renderQuestionBubble(q) {
-      if (!heroChatThread) return;
-      const bubble = document.createElement('div');
-      bubble.className = 'chatBubble chatUser';
-      bubble.innerHTML = `<p>${q.question}</p>`;
-      heroChatThread.appendChild(bubble);
-      heroChatThread.scrollTop = heroChatThread.scrollHeight;
-    }
-
-    function renderTypingIndicator() {
-      if (!heroChatThread) return null;
-      const typing = document.createElement('div');
-      typing.className = 'chatTypingBubble';
-      typing.id = 'hero-active-typing';
-      typing.innerHTML = '<span></span><span></span><span></span>';
-      heroChatThread.appendChild(typing);
-      heroChatThread.scrollTop = heroChatThread.scrollHeight;
-      return typing;
-    }
-
-    function renderAiResponseBubble(q) {
-      if (!heroChatThread) return;
-      const bubble = document.createElement('div');
-      bubble.className = 'chatBubble chatAI';
-      bubble.innerHTML = `
-        <div class="chatAIRow">
-          <div class="chatAIAvatar" aria-hidden="true">
-            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
-          </div>
-          <div class="chatAICard">
-            <div class="chatAILabel">
-              <span class="chatAIName">Moments Behind Money</span>
-              <span class="chatAIBadge">Clarity AI</span>
-            </div>
-            <p class="chatAIText">${q.text}</p>
-            <div class="chatAIMetric">${q.metric}</div>
-            <div class="chatAIMiniViz">
-              ${q.viz.map(v => `
-                <div class="miniBarRow">
-                  <span>${v.label}</span>
-                  <div class="miniBarTrack"><div class="miniBarFill" style="width: ${v.width}; background: ${v.color};"></div></div>
-                  <strong>${v.amount}</strong>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-      heroChatThread.appendChild(bubble);
-      heroChatThread.scrollTop = heroChatThread.scrollHeight;
-    }
-
-    function playNextChatQuestion() {
-      if (isChatPaused) return;
-      if (!heroChatThread) return;
-
-      if (chatSimIndex >= chatQuestionsData.length) {
-        // Reset thread smoothly for looping demo
-        heroChatThread.innerHTML = '';
-        chatSimIndex = 0;
-      }
-
-      const currentQ = chatQuestionsData[chatSimIndex];
-      typeMessageIntoInput(currentQ.question, () => {
-        renderQuestionBubble(currentQ);
-        const typingEl = renderTypingIndicator();
-        setTimeout(() => {
-          if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
-          renderAiResponseBubble(currentQ);
-          chatSimIndex++;
-          chatTimer = setTimeout(() => {
-            if (!isChatPaused) playNextChatQuestion();
-          }, 4500);
-        }, 750);
-      });
-    }
-
-    function startChatSimulation() {
-      if (chatSimStarted) return;
-      chatSimStarted = true;
-      playNextChatQuestion();
-    }
-
-    // Pre-start first question so chat thread is primed immediately
-    if (heroChatThread) {
-      startChatSimulation();
-    }
   }
 
 
