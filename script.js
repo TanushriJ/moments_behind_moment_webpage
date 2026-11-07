@@ -68,18 +68,48 @@
   }
 
   /* ═══════════════════════════════════════════
-     1. HERO MONTH PICKER & FIGURE MICRO-ANIMATIONS
+     1. HERO MONTH PICKER & HERO TOGGLE
      ═══════════════════════════════════════════ */
   const examples = [
-    { month: 'June', income: 3200, spending: 2240, story: 'A little more breathing room.', note: 'Everyday spending left €960 available for savings and plans.' },
-    { month: 'July', income: 3200, spending: 2410, story: 'A summer with a few extras.', note: 'A few more days out brought spending to €2,410. There was still €790 left over.' },
-    { month: 'August', income: 3200, spending: 2290, story: 'Back to a familiar rhythm.', note: 'Spending settled at €2,290, leaving €910 for whatever comes next.' },
-    { month: 'September', income: 3200, spending: 2520, story: 'A busier start to the season.', note: 'Spending rose to €2,520. Looking at the transactions gives the change some context.' },
-    { month: 'October', income: 3200, spending: 2350, story: 'Small changes, a little more space.', note: 'Spending eased back to €2,350, leaving €850 available.' },
-    { month: 'November', income: 3200, spending: 2860, story: 'A new home. A different kind of month.', note: 'Shopping rose with purchases for a move. A life change, with context—not just a spending spike.' },
+    {
+      month: 'June',
+      income: 3200,
+      spending: 2240,
+      story: 'Baseline spending was €2,240 in June: rent and daily groceries formed 82% of outgoings with zero spikes.'
+    },
+    {
+      month: 'July',
+      income: 3200,
+      spending: 2410,
+      story: 'Spending increased by €170 in July: summer holiday travel (+€230) was offset by lower utilities (-€60).'
+    },
+    {
+      month: 'August',
+      income: 3200,
+      spending: 2290,
+      story: 'Spending dropped by €120 in August: dining out and leisure expenses dropped back to your regular baseline.'
+    },
+    {
+      month: 'September',
+      income: 3200,
+      spending: 2530,
+      story: 'Your spending increased by €240 in September, groceries and recurring payments amount for the most of this increase.'
+    },
+    {
+      month: 'October',
+      income: 3200,
+      spending: 2350,
+      story: 'Spending decreased by €180 in October: annual subscriptions ended and groceries returned to your €620 monthly average.'
+    },
+    {
+      month: 'November',
+      income: 3200,
+      spending: 2860,
+      story: 'Spending increased by €510 in November: apartment move setup (+€340) and furniture purchases (+€170) drove the rise.'
+    },
   ];
 
-  let currentMetrics = [3200, 2860, 340];
+  let currentMetrics = [3200, 2530, 670];
   const figure = document.querySelector('.heroFigure');
   if (figure) {
     const spendingChart = figure.querySelector('svg.chart');
@@ -121,10 +151,10 @@
             group.prepend(highlight);
           }
         });
-        const monthLabel = figure.querySelector('.monthLabel');
-        if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / THE BIGGER PICTURE`;
-        const titleEl = figure.querySelector('.figureTitle h2');
-        if (titleEl) titleEl.textContent = index === 5 ? 'A month of making space.' : example.story;
+        const monthLabel = document.getElementById('hero-month-label') || figure.querySelector('.monthLabel');
+        if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / €${example.spending.toLocaleString()} SPENT`;
+        const titleEl = document.getElementById('hero-month-title') || figure.querySelector('.figureTitle h2');
+        if (titleEl) titleEl.textContent = example.story;
 
         // Smoothly animate count-up from old values to new values
         const metricsEls = figure.querySelectorAll('.metrics strong');
@@ -136,16 +166,219 @@
           currentMetrics = newValues;
         }
 
-        const noteStrong = figure.querySelector('.storyNote strong');
-        if (noteStrong) noteStrong.textContent = example.story;
-        const noteP = figure.querySelector('.storyNote p');
-        if (noteP) noteP.textContent = example.note;
         const desc = spendingChart?.querySelector('desc');
         if (desc) {
-          desc.textContent = `Fictional income and spending from June to November. ${example.month} is highlighted: income ${money(example.income)}, spending ${money(example.spending)}, left over ${money(example.income - example.spending)}. Full figures are available in the chart data table.`;
+          desc.textContent = `Fictional income and spending from June to November. ${example.month} is highlighted: income ${money(example.income)}, spending ${money(example.spending)}, left over ${money(example.income - example.spending)}.`;
         }
       });
     });
+
+    // ── Hero Mode Toggle: Insights vs Chat ──
+    const heroTabInsights = document.getElementById('hero-tab-insights');
+    const heroTabClarity = document.getElementById('hero-tab-clarity');
+    const heroPanelInsights = document.getElementById('hero-panel-insights');
+    const heroPanelClarity = document.getElementById('hero-panel-clarity');
+    const heroTagBadge = document.getElementById('hero-tag-badge');
+
+    function setHeroMode(mode) {
+      const isInsights = mode === 'insights';
+      if (heroTabInsights) {
+        heroTabInsights.classList.toggle('active', isInsights);
+        heroTabInsights.setAttribute('aria-selected', String(isInsights));
+      }
+      if (heroTabClarity) {
+        heroTabClarity.classList.toggle('active', !isInsights);
+        heroTabClarity.setAttribute('aria-selected', String(!isInsights));
+      }
+      if (heroPanelInsights) {
+        heroPanelInsights.hidden = !isInsights;
+      }
+      if (heroPanelClarity) {
+        heroPanelClarity.hidden = isInsights;
+        if (!isInsights && !chatSimStarted) {
+          startChatSimulation();
+        }
+      }
+      if (heroTagBadge) {
+        heroTagBadge.textContent = 'EXAMPLE DATA';
+      }
+    }
+
+    if (heroTabInsights && heroTabClarity) {
+      heroTabInsights.addEventListener('click', () => setHeroMode('insights'));
+      heroTabClarity.addEventListener('click', () => setHeroMode('clarity'));
+    }
+
+    // ── Chat Panel: Autonomous Simulated Conversation ──
+    const chatQuestionsData = [
+      {
+        question: 'What subscriptions am I still paying for?',
+        metric: '5 active · €142/mo',
+        text: 'Found 5 active monthly subscriptions totaling €142/month: Gym membership (€49.00), Software tools (€54.00), Streaming (€28.00), and Spotify (€10.99). You haven\'t used the gym in 6 weeks.',
+        viz: [
+          { label: 'Software tools', amount: '€54.00', width: '38%', color: 'var(--color-accent)' },
+          { label: 'Gym membership', amount: '€49.00', width: '35%', color: 'var(--color-clay)' },
+          { label: 'Media & Spotify', amount: '€39.00', width: '27%', color: '#6b8f71' }
+        ]
+      },
+      {
+        question: 'Why did I spend more this month?',
+        metric: '+€240 vs August',
+        text: 'Your spending increased by €240 in September. Recurring software renewals (+€130) and back-to-school groceries (+€110) drove the difference; core rent and utilities stayed flat.',
+        viz: [
+          { label: 'Software renewals', amount: '+€130', width: '54%', color: 'var(--color-clay)' },
+          { label: 'Groceries & Food', amount: '+€110', width: '46%', color: 'var(--color-accent)' },
+          { label: 'Rent & Utilities', amount: 'Flat (€0)', width: '6%', color: '#6b8f71' }
+        ]
+      },
+      {
+        question: 'What does my spending look if I do a monthly dance class for 30 euros?',
+        metric: '€640 leftover cushion',
+        text: 'Adding €30/month for a dance class leaves you with €640 in monthly cushion (down from €670). You can easily absorb this within your existing €3,200 monthly income.',
+        viz: [
+          { label: 'Current leftover', amount: '€670', width: '67%', color: 'var(--color-accent)' },
+          { label: 'Dance class', amount: '-€30', width: '10%', color: 'var(--color-clay)' },
+          { label: 'Projected cushion', amount: '€640', width: '64%', color: '#6b8f71' }
+        ]
+      }
+    ];
+
+    const heroChatThread = document.getElementById('hero-chat-thread');
+    const heroChatInput = document.getElementById('hero-chat-input');
+    const heroChatSendBtn = document.getElementById('hero-chat-send-btn');
+    const heroChatPauseBtn = document.getElementById('hero-chat-pause-btn');
+    const heroChatPauseText = document.getElementById('hero-chat-pause-text');
+
+    let chatSimStarted = false;
+    let chatSimIndex = 0;
+    let isChatPaused = false;
+    let chatTimer = null;
+
+    if (heroChatPauseBtn) {
+      heroChatPauseBtn.addEventListener('click', () => {
+        isChatPaused = !isChatPaused;
+        const svgEl = heroChatPauseBtn.querySelector('.pauseIconSvg');
+        if (isChatPaused) {
+          if (heroChatPauseText) heroChatPauseText.textContent = 'Resume';
+          if (svgEl) svgEl.innerHTML = '<polygon points="5 3 19 12 5 21 5 3"/>';
+        } else {
+          if (heroChatPauseText) heroChatPauseText.textContent = 'Pause';
+          if (svgEl) svgEl.innerHTML = '<rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/>';
+          playNextChatQuestion();
+        }
+      });
+    }
+
+    function typeMessageIntoInput(text, onComplete) {
+      if (!heroChatInput) {
+        onComplete();
+        return;
+      }
+      heroChatInput.value = '';
+      let charIdx = 0;
+      const typeInterval = setInterval(() => {
+        if (charIdx < text.length) {
+          heroChatInput.value += text[charIdx];
+          charIdx++;
+        } else {
+          clearInterval(typeInterval);
+          if (heroChatSendBtn) heroChatSendBtn.classList.add('active');
+          setTimeout(() => {
+            if (heroChatSendBtn) heroChatSendBtn.classList.remove('active');
+            heroChatInput.value = '';
+            onComplete();
+          }, 350);
+        }
+      }, 25);
+    }
+
+    function renderQuestionBubble(q) {
+      if (!heroChatThread) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'chatBubble chatUser';
+      bubble.innerHTML = `<p>${q.question}</p>`;
+      heroChatThread.appendChild(bubble);
+      heroChatThread.scrollTop = heroChatThread.scrollHeight;
+    }
+
+    function renderTypingIndicator() {
+      if (!heroChatThread) return null;
+      const typing = document.createElement('div');
+      typing.className = 'chatTypingBubble';
+      typing.id = 'hero-active-typing';
+      typing.innerHTML = '<span></span><span></span><span></span>';
+      heroChatThread.appendChild(typing);
+      heroChatThread.scrollTop = heroChatThread.scrollHeight;
+      return typing;
+    }
+
+    function renderAiResponseBubble(q) {
+      if (!heroChatThread) return;
+      const bubble = document.createElement('div');
+      bubble.className = 'chatBubble chatAI';
+      bubble.innerHTML = `
+        <div class="chatAIRow">
+          <div class="chatAIAvatar" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+          </div>
+          <div class="chatAICard">
+            <div class="chatAILabel">
+              <span class="chatAIName">Moments Behind Money</span>
+              <span class="chatAIBadge">Clarity AI</span>
+            </div>
+            <p class="chatAIText">${q.text}</p>
+            <div class="chatAIMetric">${q.metric}</div>
+            <div class="chatAIMiniViz">
+              ${q.viz.map(v => `
+                <div class="miniBarRow">
+                  <span>${v.label}</span>
+                  <div class="miniBarTrack"><div class="miniBarFill" style="width: ${v.width}; background: ${v.color};"></div></div>
+                  <strong>${v.amount}</strong>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+      heroChatThread.appendChild(bubble);
+      heroChatThread.scrollTop = heroChatThread.scrollHeight;
+    }
+
+    function playNextChatQuestion() {
+      if (isChatPaused) return;
+      if (!heroChatThread) return;
+
+      if (chatSimIndex >= chatQuestionsData.length) {
+        // Reset thread smoothly for looping demo
+        heroChatThread.innerHTML = '';
+        chatSimIndex = 0;
+      }
+
+      const currentQ = chatQuestionsData[chatSimIndex];
+      typeMessageIntoInput(currentQ.question, () => {
+        renderQuestionBubble(currentQ);
+        const typingEl = renderTypingIndicator();
+        setTimeout(() => {
+          if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+          renderAiResponseBubble(currentQ);
+          chatSimIndex++;
+          chatTimer = setTimeout(() => {
+            if (!isChatPaused) playNextChatQuestion();
+          }, 4500);
+        }, 750);
+      });
+    }
+
+    function startChatSimulation() {
+      if (chatSimStarted) return;
+      chatSimStarted = true;
+      playNextChatQuestion();
+    }
+
+    // Pre-start first question so chat thread is primed immediately
+    if (heroChatThread) {
+      startChatSimulation();
+    }
   }
 
 
@@ -309,51 +542,133 @@
   const sessionItems = Array.from(document.querySelectorAll('.chatMockSession'));
   const newChatBtn = document.querySelector('.chatMockNewBtn');
 
+  // Bar / Pie view toggles
+  const barBtn = document.getElementById('btn-chart-bar');
+  const pieBtn = document.getElementById('btn-chart-pie');
+  const barView = document.getElementById('demo-bar-view');
+  const pieView = document.getElementById('demo-pie-view');
+  let activeChartView = 'bar';
+
+  function setChartView(view) {
+    activeChartView = view;
+    const isBar = view === 'bar';
+    if (barBtn) {
+      barBtn.classList.toggle('active', isBar);
+      barBtn.setAttribute('aria-pressed', String(isBar));
+    }
+    if (pieBtn) {
+      pieBtn.classList.toggle('active', !isBar);
+      pieBtn.setAttribute('aria-pressed', String(!isBar));
+    }
+    if (barView) barView.style.display = isBar ? 'block' : 'none';
+    if (pieView) pieView.style.display = !isBar ? 'block' : 'none';
+  }
+
+  if (barBtn) {
+    barBtn.addEventListener('click', () => {
+      autoPlayCancelled = true;
+      setChartView('bar');
+    });
+  }
+  if (pieBtn) {
+    pieBtn.addEventListener('click', () => {
+      autoPlayCancelled = true;
+      setChartView('pie');
+    });
+  }
+
   const scenarios = [
     {
-      title: 'October spending',
+      title: 'Where is money going?',
       meta: 'Dissecting transactions & visualizing answers',
-      userQuestion: 'How much did I spend on food vs transport last month?',
+      userQuestion: 'Where is most of my money actually going?',
       aiParagraphs: [
-        'In October, you spent <strong>€342</strong> on Food & Groceries and <strong>€127</strong> on Transport & Travel.',
-        'Food was your largest expense category, representing about <strong>2.7×</strong> your transport costs.'
+        'In October, your spending was concentrated in <strong>Food &amp; Groceries (€342)</strong> and <strong>Transport (€127)</strong>, representing <strong>73%</strong> of your tracked expenses.',
+        'Food was your highest single category, with supermarket visits accounting for €245 of that total.'
       ],
-      chartTitle: 'Food vs Transport — October',
+      chartTitle: 'Spending by Category (October)',
       bars: [
         { label: 'Food & Groceries', width: 82, value: '€342', alt: false },
         { label: 'Transport & Travel', width: 31, value: '€127', alt: true }
       ],
-      suggestions: ['Compare with September', 'Show top 5 categories']
+      pie: {
+        total: '€469',
+        sub: 'COMPARED',
+        slices: [
+          { label: 'Food & Groceries', value: '€342', pct: '73%', dash: '220.16 301.59', offset: '0', class: 'food' },
+          { label: 'Transport & Travel', value: '€127', pct: '27%', dash: '81.43 301.59', offset: '-220.16', class: 'transport' }
+        ]
+      },
+      suggestions: ['What subscriptions am I paying for?', 'Why did I spend more this month?', 'Show pie chart breakdown']
     },
     {
-      title: 'September summary',
-      meta: 'Month-over-month comparison',
-      userQuestion: 'How does October compare with September?',
+      title: 'Subscriptions audit',
+      meta: 'Uncovering overlooked recurring expenses',
+      userQuestion: 'What subscriptions am I still paying for?',
       aiParagraphs: [
-        'In September, Food was <strong>€318</strong> and Transport was <strong>€145</strong>.',
-        'Between months, Food rose by <strong>+€24 (+7.5%)</strong> while Transport dropped by <strong>-€18 (-12.4%)</strong>.'
+        'You have <strong>4 active recurring services</strong> totaling <strong>€74.49/month</strong> (€893.88/year).',
+        'Detected: <strong>Fitness Club (€35.00)</strong>, <strong>Swapfiets Mobility (€19.50)</strong>, <strong>Cloud Storage (€9.99)</strong>, and <strong>Streaming (€10.00)</strong>.'
+      ],
+      chartTitle: 'Monthly Subscriptions (€74.49/mo)',
+      bars: [
+        { label: 'Fitness & Health', width: 70, value: '€35.00', alt: false },
+        { label: 'Mobility & Cloud', width: 40, value: '€19.50', alt: true }
+      ],
+      pie: {
+        total: '€74.49',
+        sub: 'MONTHLY',
+        slices: [
+          { label: 'Fitness Club', value: '€35.00', pct: '47%', dash: '141.75 301.59', offset: '0', class: 'food' },
+          { label: 'Mobility & Digital', value: '€39.49', pct: '53%', dash: '159.84 301.59', offset: '-141.75', class: 'transport' }
+        ]
+      },
+      suggestions: ['Where is most of my money going?', 'Why did I spend more this month?']
+    },
+    {
+      title: 'Why spend more?',
+      meta: 'Month-over-month contextual comparison',
+      userQuestion: 'Why did I spend more this month?',
+      aiParagraphs: [
+        'October spending was <strong>€2,860</strong>, which is <strong>€510 higher</strong> than September (€2,350).',
+        'The increase was driven by <strong>€480 in one-off home &amp; moving purchases</strong>. Everyday living costs remained steady (+€30).'
       ],
       chartTitle: 'September vs October Comparison',
       bars: [
-        { label: 'Food (Sep → Oct)', width: 82, value: '+€24', alt: false },
-        { label: 'Transport (Sep → Oct)', width: 24, value: '-€18', alt: true }
+        { label: 'Moving & Setup (One-off)', width: 85, value: '+€480', alt: false },
+        { label: 'Regular Living Costs', width: 15, value: '+€30', alt: true }
       ],
-      suggestions: ['Can I afford a trip?', 'Reset to October']
+      pie: {
+        total: '+€510',
+        sub: 'DIFFERENCE',
+        slices: [
+          { label: 'One-off Moving Setup', value: '+€480', pct: '94%', dash: '283.49 301.59', offset: '0', class: 'food' },
+          { label: 'Regular Living Costs', value: '+€30', pct: '6%', dash: '18.1 301.59', offset: '-283.49', class: 'transport' }
+        ]
+      },
+      suggestions: ['Commit to something new?', 'Where is most of my money going?']
     },
     {
-      title: 'Can I afford a trip?',
-      meta: 'Forward-looking goal projection',
-      userQuestion: 'Can I afford a €600 trip in December?',
+      title: 'Commit to something new?',
+      meta: 'Forward-looking capacity & safety buffer',
+      userQuestion: 'What does my spending look like before I commit to something new?',
       aiParagraphs: [
-        'With your typical leftover of <strong>€340/month</strong>, setting aside €200/month across the next 3 months reaches <strong>€600</strong> by mid-December.',
-        'You’ll still have a <strong>€140/month</strong> buffer for unexpected costs.'
+        'Across the past 6 months, you averaged <strong>€340/month leftover</strong> after all essentials and living costs.',
+        'If you commit to a new <strong>€150/month</strong> expense, you still preserve a comfortable <strong>€190/month safety buffer</strong> for unexpected costs.'
       ],
-      chartTitle: 'Trip Goal Progress (€600 Target)',
+      chartTitle: 'Monthly Capacity vs New Commitment',
       bars: [
-        { label: 'Projected Savings', width: 100, value: '€600', alt: false },
-        { label: 'Safety Buffer', width: 35, value: '€210', alt: true }
+        { label: 'Preserved Safety Buffer', width: 56, value: '€190', alt: false },
+        { label: 'New Commitment', width: 44, value: '€150', alt: true }
       ],
-      suggestions: ['Show October spending', 'How does this affect my plan?']
+      pie: {
+        total: '€340',
+        sub: 'LEFTOVER',
+        slices: [
+          { label: 'Preserved Safety Buffer', value: '€190', pct: '56%', dash: '168.89 301.59', offset: '0', class: 'food' },
+          { label: 'New Expense Share', value: '€150', pct: '44%', dash: '132.7 301.59', offset: '-168.89', class: 'transport' }
+        ]
+      },
+      suggestions: ['What subscriptions am I paying for?', 'Show pie chart breakdown']
     }
   ];
 
@@ -397,7 +712,8 @@
     const token = ++chatToken;
     const data = scenarios[index] || scenarios[0];
 
-    sessionItems.forEach((session, i) => {
+    const currentSessions = Array.from(document.querySelectorAll('.chatMockSession'));
+    currentSessions.forEach((session, i) => {
       session.classList.toggle('active', i === index);
     });
 
@@ -452,7 +768,7 @@
       }
     }
 
-    // Step 4: Show inline chart and animate bars
+    // Step 4: Show inline chart and animate bars and pie
     await wait(200, token);
     if (token !== chatToken) return;
     if (demoChartEl) {
@@ -460,6 +776,7 @@
       const chartTitleEl = demoChartEl.querySelector('.chatMockChartTitle');
       if (chartTitleEl) chartTitleEl.textContent = data.chartTitle;
 
+      // Update bars
       const barContainers = demoChartEl.querySelectorAll('.chatMockBar');
       data.bars.forEach((barData, i) => {
         const barDiv = barContainers[i];
@@ -481,6 +798,37 @@
           }, 120);
         }
       });
+
+      // Update pie
+      if (data.pie) {
+        const totalEl = document.getElementById('pie-center-total');
+        const subEl = demoChartEl.querySelector('.pieCenterSub');
+        const slice1 = document.getElementById('pie-slice-1');
+        const slice2 = document.getElementById('pie-slice-2');
+        const pieLegendEl = document.getElementById('demo-pie-legend');
+
+        if (totalEl) totalEl.textContent = data.pie.total;
+        if (subEl) subEl.textContent = data.pie.sub;
+        if (slice1 && data.pie.slices[0]) {
+          slice1.setAttribute('stroke-dasharray', data.pie.slices[0].dash);
+          slice1.setAttribute('stroke-dashoffset', data.pie.slices[0].offset);
+        }
+        if (slice2 && data.pie.slices[1]) {
+          slice2.setAttribute('stroke-dasharray', data.pie.slices[1].dash);
+          slice2.setAttribute('stroke-dashoffset', data.pie.slices[1].offset);
+        }
+        if (pieLegendEl && data.pie.slices.length >= 2) {
+          pieLegendEl.innerHTML = data.pie.slices.map((s) => `
+            <div class="pieLegendItem">
+              <span class="pieDot ${s.class}"></span>
+              <div class="pieLegendInfo">
+                <span class="pieLegendName">${s.label}</span>
+                <span class="pieLegendVal">${s.value} <small>(${s.pct})</small></span>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
     }
 
     // Step 5: Suggestions
@@ -494,9 +842,21 @@
         btn.textContent = text;
         btn.addEventListener('click', () => {
           autoPlayCancelled = true;
-          if (text.includes('September')) playChatScenario(1, true);
-          else if (text.includes('trip') || text.includes('afford')) playChatScenario(2, true);
-          else playChatScenario(0, true);
+          if (text.includes('pie') || text.includes('Pie')) {
+            setChartView('pie');
+          } else if (text.includes('subscription') || text.includes('Subscription')) {
+            setChartView('bar');
+            playChatScenario(1, true);
+          } else if (text.includes('spend more') || text.includes('Spend more')) {
+            setChartView('bar');
+            playChatScenario(2, true);
+          } else if (text.includes('commit') || text.includes('Commit')) {
+            setChartView('bar');
+            playChatScenario(3, true);
+          } else {
+            setChartView('bar');
+            playChatScenario(0, true);
+          }
         });
         demoSuggestionsEl.appendChild(btn);
       });
@@ -506,10 +866,30 @@
     isChatPlaying = false;
   }
 
-  sessionItems.forEach((session, index) => {
-    session.addEventListener('click', () => {
+  // Bind session clicks
+  function bindSessionClicks() {
+    const sessions = Array.from(document.querySelectorAll('.chatMockSession'));
+    sessions.forEach((session, index) => {
+      session.addEventListener('click', () => {
+        autoPlayCancelled = true;
+        playChatScenario(index, true);
+      });
+    });
+  }
+  bindSessionClicks();
+
+  // Wire Question Action Buttons to jump to chat demo
+  const questionActionBtns = Array.from(document.querySelectorAll('.questionActionBtn'));
+  questionActionBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
       autoPlayCancelled = true;
-      playChatScenario(index, true);
+      const targetScenario = parseInt(btn.dataset.targetScenario, 10) || 0;
+      setWalkthroughStep(1, false);
+      const demoSection = document.getElementById('welcome-demo');
+      if (demoSection) {
+        demoSection.scrollIntoView({ behavior: isReducedMotion() ? 'auto' : 'smooth' });
+      }
+      playChatScenario(targetScenario, true);
     });
   });
 
@@ -521,78 +901,27 @@
   }
 
   /* ═══════════════════════════════════════════
-     6. SECTION 04: PRIVACY COMPARISON & SCRAMBLE
+     6. PRIVACY DATA FLOW PULSE
      ═══════════════════════════════════════════ */
-  const privacySplit = document.getElementById('privacy-split');
-  const shield = document.getElementById('privacy-shield');
-  const arrows = Array.from(document.querySelectorAll('.privacyArrow'));
-  const maskIban = document.getElementById('mask-iban');
-  const maskMerchant = document.getElementById('mask-merchant');
-  const maskAmount = document.getElementById('mask-amount');
-
-  if (privacySplit && 'IntersectionObserver' in window) {
-    let animated = false;
-    const privacyObserver = new IntersectionObserver((entries, observer) => {
+  const dataFlow = document.querySelector('.dataFlow');
+  if (dataFlow && 'IntersectionObserver' in window) {
+    const dataFlowObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting && !animated) {
-          animated = true;
-          if (shield) shield.classList.add('pulse');
-          arrows.forEach((arr, i) => {
+        if (entry.isIntersecting) {
+          const highlightStep = dataFlow.querySelector('.dataFlowStep.highlight .dataFlowIcon');
+          if (highlightStep) {
+            highlightStep.style.transform = 'scale(1.08)';
+            highlightStep.style.transition = 'transform 0.4s ease';
             setTimeout(() => {
-              arr.classList.add('visible');
-            }, 160 * (i + 1));
-          });
-
-          // Animate scramble and morphing
-          setTimeout(() => {
-            if (maskIban) {
-              maskIban.classList.add('highlight');
-              scrambleText(maskIban, 'IBAN..4300', 700);
-            }
-          }, 250);
-
-          setTimeout(() => {
-            if (maskMerchant) {
-              maskMerchant.classList.add('highlight');
-              scrambleText(maskMerchant, 'Merchant_1', 650);
-            }
-          }, 450);
-
-          setTimeout(() => {
-            if (maskAmount) {
-              maskAmount.classList.add('highlight');
-              scrambleText(maskAmount, '€175.00', 500);
-            }
-          }, 650);
-
+              highlightStep.style.transform = 'scale(1)';
+            }, 400);
+          }
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.25 });
-    privacyObserver.observe(privacySplit);
-  } else {
-    arrows.forEach((arr) => arr.classList.add('visible'));
+    }, { threshold: 0.3 });
+    dataFlowObserver.observe(dataFlow);
   }
-
-  // Side-by-side hover linking
-  const userRows = Array.from(document.querySelectorAll('.privacyColUser dl > div'));
-  const aiRows = Array.from(document.querySelectorAll('.privacyColAI dl > div'));
-  userRows.forEach((row, i) => {
-    const aiRow = aiRows[i];
-    if (!aiRow) return;
-    const onEnter = () => {
-      row.classList.add('highlighted');
-      aiRow.classList.add('highlighted');
-    };
-    const onLeave = () => {
-      row.classList.remove('highlighted');
-      aiRow.classList.remove('highlighted');
-    };
-    row.addEventListener('mouseenter', onEnter);
-    row.addEventListener('mouseleave', onLeave);
-    aiRow.addEventListener('mouseenter', onEnter);
-    aiRow.addEventListener('mouseleave', onLeave);
-  });
 
   /* ═══════════════════════════════════════════
      7. WAITLIST SIGNUP FORM
