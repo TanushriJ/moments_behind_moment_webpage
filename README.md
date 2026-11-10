@@ -14,11 +14,11 @@ A privacy-first clarity layer between your bank and your financial decisions.
    - **Hero Visual Card with Dual Toggle**:
      - **Insights (Pictures)**: Interactive 6-month chart with concrete spending chips updating per month (e.g., November move setup & groceries).
      - **Clarity (Questions)**: Interactive switcher answering the 4 core questions users actually ask with simulated AI analysis and mini bar breakdowns.
-2. **Features (`01 / WHAT MAKES THIS DIFFERENT`)**: Local data parsing, privacy transformation, and forward-looking simulations.
-3. **Interactive Demo (`02 / SEE IT IN PRACTICE`)**: 3-step walkthrough with drop zone, dynamic chat simulation with dual bar/pie charts, and visual privacy shield scanner.
-4. **Privacy Shield (`03 / PRIVACY YOU CAN SEE`)**: Visualizing data flows (*Your Computer* → *Privacy Shield* → *AI Analysis* → *Your Answer*).
-5. **How It Works (`04 / A FAMILIAR STARTING POINT`)**: 4-step user journey from statement to understanding.
-6. **Waitlist Signup (`05 / TRY IT`)**: Direct waitlist integration.
+2. **Interactive Demo (`01 / SEE IT IN PRACTICE`)**: All three steps share the upload's 480px frame. The CSV arrives, transaction rows appear and are categorized, then the chart draws and a preview cursor clicks April to reveal a short Albert Heijn insight. The chat immediately types and sends a sample question, shows a thinking indicator, and streams the answer and chart. Each loop rotates to the next sample question. Pause and Replay controls are available; interacting takes over. Playback stops offscreen and in background tabs. Reduced motion shows completed states without automatic playback. Tabs support arrow keys, Home, and End; chart months support Enter and Space. The composer recognizes subscriptions, unusual expenses, and May.
+3. **Privacy Shield (`02 / USEFUL PATTERNS: PRIVACY DETAILS`)**: Side-by-side masking and scaling examples, followed by the flow *Your Computer* → *Privacy Shield* → *AI Analysis* → *Your Answer*.
+4. **Waitlist Signup**: Existing signup integration.
+
+The walkthrough uses preset fictional figures; it does not parse uploaded files or call an AI service. May's €16,400 earned, €12,110 spent, and €4,290 kept are running totals through May. May alone has €3,106 income and €2,749 spending, including the €1,850 Greece trip. Recording a month toggles a marker for the current page session. The Privacy Shield illustrates the intended product flow.
 
 ---
 
