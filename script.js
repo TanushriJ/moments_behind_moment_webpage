@@ -10,189 +10,7 @@
   const money = (value) => euro.format(value);
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ═══════════════════════════════════════════
-     UTILITY: NUMERIC COUNT-UP & TEXT SCRAMBLE
-     ═══════════════════════════════════════════ */
-  function countNumber(el, start, end, duration = 800) {
-    if (!el) return;
-    if (isReducedMotion()) {
-      el.textContent = money(end);
-      return;
-    }
-    const startTime = performance.now();
-    function tick(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      // Ease out cubic
-      const ease = 1 - Math.pow(1 - progress, 3);
-      const current = Math.round(start + (end - start) * ease);
-      el.textContent = money(current);
-      if (progress < 1) {
-        requestAnimationFrame(tick);
-      } else {
-        el.textContent = money(end);
-      }
-    }
-    requestAnimationFrame(tick);
-  }
-
-  const CIPHER_CHARS = 'ABCDEF0123456789#@$%&*!?';
-  function scrambleText(element, targetText, duration = 650) {
-    if (!element) return;
-    if (isReducedMotion()) {
-      element.textContent = targetText;
-      return;
-    }
-    const startTime = performance.now();
-    const length = targetText.length;
-    function update(now) {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const fixedChars = Math.floor(progress * length);
-      let output = targetText.slice(0, fixedChars);
-      for (let i = fixedChars; i < length; i++) {
-        if (targetText[i] === ' ' || targetText[i] === '€' || targetText[i] === '.') {
-          output += targetText[i];
-        } else {
-          output += CIPHER_CHARS.charAt(Math.floor(Math.random() * CIPHER_CHARS.length));
-        }
-      }
-      element.textContent = output;
-      if (progress < 1) {
-        requestAnimationFrame(update);
-      } else {
-        element.textContent = targetText;
-      }
-    }
-    requestAnimationFrame(update);
-  }
-
-  /* ═══════════════════════════════════════════
-     1. HERO 5-MONTH SPENDING OVERVIEW
-     ═══════════════════════════════════════════ */
-  const examples = [
-    {
-      month: 'July',
-      income: 3200,
-      spending: 2410,
-      story: 'Spending was €2,410 in July: summer travel (+€230) was balanced by lower seasonal utilities.'
-    },
-    {
-      month: 'August',
-      income: 3200,
-      spending: 2290,
-      story: 'Spending dropped to €2,290 in August: dining out and leisure expenses returned to your baseline.'
-    },
-    {
-      month: 'September',
-      income: 3200,
-      spending: 2530,
-      story: 'Your spending increased by €240 in September, groceries and recurring payments amount for the most of this increase.'
-    },
-    {
-      month: 'October',
-      income: 3200,
-      spending: 2350,
-      story: 'Spending decreased by €180 in October: annual subscriptions ended and groceries returned to average.'
-    },
-    {
-      month: 'November',
-      income: 3200,
-      spending: 2860,
-      story: 'Spending increased by €510 in November: apartment move setup (+€340) and furniture purchases (+€170) drove the rise.'
-    }
-  ];
-
-  let currentMetrics = [3200, 2530, 670];
-  const figure = document.querySelector('.heroFigure');
-  if (figure) {
-    const spendingChart = figure.querySelector('svg.chart');
-    const monthCols = Array.from(figure.querySelectorAll('.monthCol'));
-
-    // Scroll trigger for initial hero bar chart entrance and number count-up
-    if ('IntersectionObserver' in window) {
-      let heroAnimated = false;
-      const heroObserver = new IntersectionObserver((entries, observer) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting && !heroAnimated) {
-            heroAnimated = true;
-            figure.classList.add('chart-animated');
-            const metricsEls = figure.querySelectorAll('.metrics strong');
-            if (metricsEls.length >= 3) {
-              countNumber(metricsEls[0], 0, currentMetrics[0], 900);
-              countNumber(metricsEls[1], 0, currentMetrics[1], 900);
-              countNumber(metricsEls[2], 0, currentMetrics[2], 900);
-            }
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.2 });
-      heroObserver.observe(figure);
-    }
-
-    const highlightXPositions = [61, 149, 237, 325, 413];
-
-    function selectMonth(index) {
-      if (index < 0 || index >= examples.length) return;
-      const example = examples[index];
-      monthCols.forEach((col, i) => {
-        col.classList.toggle('active', i === index);
-        col.setAttribute('opacity', i === index ? '1' : '0.45');
-        col.querySelector('.chartHighlight')?.remove();
-        const label = col.querySelector('.axisLabel');
-        if (label) {
-          label.classList.toggle('monthActiveLabel', i === index);
-        }
-        if (i === index) {
-          const highlight = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-          Object.entries({
-            x: highlightXPositions[i],
-            y: 16,
-            width: 66,
-            height: 190,
-            rx: 8,
-            class: 'chartHighlight'
-          }).forEach(([key, value]) => highlight.setAttribute(key, String(value)));
-          col.prepend(highlight);
-        }
-      });
-
-      const monthLabel = document.getElementById('hero-month-label') || figure.querySelector('.monthLabel');
-      if (monthLabel) monthLabel.textContent = `${example.month.toUpperCase()} / €${example.spending.toLocaleString()} SPENT`;
-      const titleEl = document.getElementById('hero-month-title') || figure.querySelector('.figureTitle h2');
-      if (titleEl) titleEl.textContent = example.story;
-
-      // Smoothly animate count-up from old values to new values
-      const metricsEls = figure.querySelectorAll('.metrics strong');
-      if (metricsEls.length >= 3) {
-        const newValues = [example.income, example.spending, example.income - example.spending];
-        countNumber(metricsEls[0], currentMetrics[0], newValues[0], 500);
-        countNumber(metricsEls[1], currentMetrics[1], newValues[1], 500);
-        countNumber(metricsEls[2], currentMetrics[2], newValues[2], 500);
-        currentMetrics = newValues;
-      }
-
-      const desc = spendingChart?.querySelector('desc');
-      if (desc) {
-        desc.textContent = `Fictional income and spending from July to November. ${example.month} is highlighted: income ${money(example.income)}, spending ${money(example.spending)}, left over ${money(example.income - example.spending)}.`;
-      }
-    }
-
-    monthCols.forEach((col, index) => {
-      col.addEventListener('click', () => selectMonth(index));
-      col.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          selectMonth(index);
-        }
-      });
-    });
-  }
-
-
-  /* ═══════════════════════════════════════════
-     3. SCROLL REVEALS
-     ═══════════════════════════════════════════ */
+  // Reveal the supporting sections when they enter the viewport.
   const revealElements = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
     const revealObserver = new IntersectionObserver((entries, observer) => {
@@ -216,8 +34,10 @@
   const panels = stepButtons.map((button) => document.getElementById(button.getAttribute('aria-controls')));
   const nextStepBtns = Array.from(document.querySelectorAll('[data-next-step]'));
   const previewSection = document.getElementById('welcome-walkthrough');
-  const previewToggle = document.getElementById('preview-toggle');
   const previewStatus = document.getElementById('preview-status');
+  const PREVIEW_MOTION_SCALE = 2;
+  const UNDERSTAND_READING_PAUSE = 6500;
+  const EXPLORE_READING_PAUSE = 12000;
   let previewRunning = false;
   let previewInView = false;
   let previewManuallyPaused = false;
@@ -256,8 +76,12 @@
 
   stepButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      takeOverPreview();
       const stepIdx = parseInt(btn.dataset.step, 10) || 0;
+      if (stepIdx === 0) {
+        void startLivePreview({ restart: true });
+        return;
+      }
+      takeOverPreview();
       setWalkthroughStep(stepIdx);
     });
     btn.addEventListener('keydown', (event) => {
@@ -686,10 +510,8 @@
     {
       question: 'Which expenses were outside my usual monthly spending?',
       badges: ['2 one-off purchases', '284% travel increase', '€1,000 merchant milestone'],
-      chartTitle: 'One-off spending · May & June',
-      chartItems: [['May · Greece trip', 1850], ['June · Couch purchase', 1250]],
       render: () => `
-        <p>Across the six-month demo, two one-off purchases stand out alongside a travel trend:</p>
+        <p>Two one-off purchases and one travel trend stand out:</p>
         <div class="exploreDataCard">
           <div class="exploreDataRow">
             <div>
@@ -722,6 +544,7 @@
       question: 'Why was May so much more expensive?',
       badges: ['May 2026', '€1,850 Greece trip', '67% of May spending'],
       chartTitle: 'May spending · €2,749 in total',
+      chartOrientation: 'vertical',
       chartItems: [['Aegean flights', 540], ['Chania hotel', 890], ['Tavernas & car rental', 420], ['Everyday costs at home', 899]],
       render: () => `
         <p>In May 2026, your spending reached <strong>€2,749</strong> (bringing cumulative spending to €12,110), making it your peak spending month of the half-year. Here is the exact breakdown:</p>
@@ -786,11 +609,19 @@
   pieButton?.addEventListener('click', () => { takeOverPreview(); setAnswerChartView('pie'); });
 
   function renderAnswerChart(item) {
+    if (!item.chartItems) {
+      barView.replaceChildren();
+      pieView.replaceChildren();
+      return false;
+    }
     document.getElementById('demo-chart-title').textContent = item.chartTitle;
     const total = item.chartItems.reduce((sum, [,value]) => sum + value, 0);
     const max = Math.max(...item.chartItems.map(([,value]) => value));
     const currency = total < 100 ? exactMoney : money;
-    barView.innerHTML = item.chartItems.map(([label,value], index) => `
+    const vertical = item.chartOrientation === 'vertical';
+    barView.classList.toggle('is-vertical', vertical);
+    barView.innerHTML = item.chartItems.map(([label,value], index) => vertical ? `
+      <div class="chatColumn"><div class="chatColumnTrack"><div class="chatColumnFill" style="height:${(value / max * 100).toFixed(2)}%;background:${chartColors[index]}"><strong>${currency(value)}</strong></div></div><span>${label}</span></div>` : `
       <div class="chatMockBar"><div class="chatBarCaption"><span>${label}</span><strong>${currency(value)}</strong></div>
       <div class="chatMockBarTrack"><div class="chatMockBarFill" style="width:${(value / max * 100).toFixed(2)}%;background:${chartColors[index]}"></div></div></div>`).join('');
     let offset = 0;
@@ -805,6 +636,7 @@
       <svg class="pieSvg" viewBox="0 0 140 140" role="img" aria-label="${item.chartTitle}"><title>${item.chartItems.map(([label,value]) => `${label}: ${currency(value)}`).join('; ')}</title>${circles}</svg>
       <div class="pieCenterText"><span class="pieCenterTotal">${currency(total)}</span><span class="pieCenterSub">TOTAL</span></div></div>
       <div class="pieLegend">${item.chartItems.map(([label,value], index) => `<div class="pieLegendItem"><i class="pieDot" style="background:${chartColors[index]}"></i><div class="pieLegendInfo"><span class="pieLegendName">${label}</span><span class="pieLegendVal">${currency(value)} <small>(${Math.round(value / total * 100)}%)</small></span></div></div>`).join('')}</div></div>`;
+    return true;
   }
 
   async function selectExploreQuestion(index, { animate = true, question, alreadyTyped = false } = {}) {
@@ -855,12 +687,15 @@
         panels[2].dataset.phase = 'answering';
         await streamDemoAnswer(signal);
       }
-      renderAnswerChart(item);
-      chatChart.hidden = false;
-      if (live) {
+      const hasChart = renderAnswerChart(item);
+      chatChart.hidden = !hasChart;
+      if (live && hasChart) {
         animatePreview(chatChart, [{ opacity: 0, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], 350);
         barView.querySelectorAll('.chatMockBarFill').forEach((bar) => {
           animatePreview(bar, [{ width: '0%' }, { width: bar.style.width }], 600);
+        });
+        barView.querySelectorAll('.chatColumnFill').forEach((bar) => {
+          animatePreview(bar, [{ height: '0%' }, { height: bar.style.height }], 600);
         });
       }
       panels[2].dataset.phase = 'ready';
@@ -925,7 +760,7 @@
   const categoryStatus = document.getElementById('upload-category-status');
   uploadRows.forEach((row) => { row.dataset.category = row.querySelector('small').textContent; });
 
-  function waitForDemo(ms, signal) {
+  function waitForDemo(ms, signal, { motion = true } = {}) {
     return new Promise((resolve, reject) => {
       const abort = () => {
         clearTimeout(timer);
@@ -935,7 +770,7 @@
       const timer = setTimeout(() => {
         signal.removeEventListener('abort', abort);
         resolve();
-      }, ms);
+      }, motion ? ms * PREVIEW_MOTION_SCALE : ms);
       if (signal.aborted) abort();
       else signal.addEventListener('abort', abort, { once: true });
     });
@@ -943,7 +778,7 @@
 
   function animatePreview(element, frames, duration) {
     if (isReducedMotion() || !element?.animate) return;
-    const animation = element.animate(frames, { duration, easing: 'ease-out' });
+    const animation = element.animate(frames, { duration: duration * PREVIEW_MOTION_SCALE, easing: 'ease-out' });
     panelAnimations.add(animation);
     animation.finished.then(() => panelAnimations.delete(animation), () => panelAnimations.delete(animation));
   }
@@ -1081,25 +916,25 @@
     previewStatus.textContent = 'LIVE PREVIEW · Six months become one clear picture';
     [incomePolyline, spendingPolyline].forEach((line) => {
       const length = line.getTotalLength();
-      animatePreview(line, [{ strokeDasharray: `${length} ${length}`, strokeDashoffset: length }, { strokeDasharray: `${length} ${length}`, strokeDashoffset: 0 }], 800);
+      animatePreview(line, [{ strokeDasharray: `${length} ${length}`, strokeDashoffset: length }, { strokeDasharray: `${length} ${length}`, strokeDashoffset: 0 }], 600);
     });
     try {
-      await waitForDemo(850, signal);
+      await waitForDemo(650, signal);
       const cursor = document.getElementById('preview-chart-cursor');
       const plot = document.querySelector('.understandPlot').getBoundingClientRect();
       const point = monthDots[3].querySelector('.dotSpending').getBoundingClientRect();
       cursor.style.left = `${point.x + point.width / 2 - plot.x}px`;
       cursor.style.top = `${point.y + point.height / 2 - plot.y}px`;
       cursor.hidden = false;
-      animatePreview(cursor, [{ opacity: 0, transform: 'translate(55px, 40px)' }, { opacity: 1, transform: 'translate(0, 0)' }], 550);
-      await waitForDemo(550, signal);
+      animatePreview(cursor, [{ opacity: 0, transform: 'translate(55px, 40px)' }, { opacity: 1, transform: 'translate(0, 0)' }], 200);
+      await waitForDemo(200, signal);
       cursor.classList.add('is-clicking');
       selectUnderstandMonth(3);
       panels[1].dataset.phase = 'april';
       previewStatus.textContent = 'LIVE PREVIEW · A click reveals where everyday spending adds up';
       const chapter = chapters.find((item) => Number(item.dataset.chapter) === 3);
       animatePreview(chapter, [{ opacity: .3, transform: 'translateY(5px)' }, { opacity: 1, transform: 'translateY(0)' }], 400);
-      await waitForDemo(1050, signal);
+      await waitForDemo(UNDERSTAND_READING_PAUSE, signal, { motion: false });
       cursor.hidden = true;
       panels[1].dataset.phase = 'ready';
     } catch (error) {
@@ -1115,10 +950,8 @@
     return selectExploreQuestion(currentExploreQuestion);
   }
 
-  function updatePreviewControls() {
+  function updatePreviewState() {
     previewSection.classList.toggle('is-live', previewRunning);
-    previewToggle.innerHTML = previewRunning ? 'Ⅱ <span>Pause</span>' : '▶ <span>Play</span>';
-    previewToggle.setAttribute('aria-label', previewRunning ? 'Pause live preview' : 'Play live preview');
   }
 
   function stopLivePreview({ manual = false, settle = true } = {}) {
@@ -1141,7 +974,7 @@
       }
     }
     previewStatus.textContent = manual ? 'INTERACTIVE PREVIEW · Explore at your own pace' : 'LIVE PREVIEW · Ready when you are';
-    updatePreviewControls();
+    updatePreviewState();
   }
 
   function takeOverPreview({ settle = true } = {}) {
@@ -1152,13 +985,14 @@
     stopLivePreview({ settle: true });
     previewManuallyPaused = false;
     if (isReducedMotion()) {
+      if (restart) setWalkthroughStep(0, { animate: false });
       previewStatus.textContent = 'INTERACTIVE PREVIEW · Choose a step to explore';
       return;
     }
     const run = new AbortController();
     tourRun = run;
     previewRunning = true;
-    updatePreviewControls();
+    updatePreviewState();
     let index = restart ? 0 : activeWalkthroughStep;
     let nextQuestion = restart ? 0 : currentExploreQuestion;
     try {
@@ -1167,16 +1001,16 @@
         const fill = stepButtons[index].querySelector('.stepFill');
         progressAnimation?.cancel();
         progressAnimation = fill.animate([{ width: '0%' }, { width: '100%' }], {
-          duration: [2100, 2600, 6000][index], fill: 'forwards', easing: 'linear'
+          duration: [1950 * PREVIEW_MOTION_SCALE + 120, 850 * PREVIEW_MOTION_SCALE + UNDERSTAND_READING_PAUSE + 120, 4500 * PREVIEW_MOTION_SCALE + EXPLORE_READING_PAUSE][index], fill: 'forwards', easing: 'linear'
         });
         if (index === 2) {
           previewStatus.textContent = 'LIVE PREVIEW · A question becomes a clear answer';
           await selectExploreQuestion(nextQuestion);
-          await waitForDemo(1500, run.signal);
+          await waitForDemo(EXPLORE_READING_PAUSE, run.signal, { motion: false });
           nextQuestion = (nextQuestion + 1) % exploreQuestionsData.length;
         } else {
           await playPanelPreview(index);
-          await waitForDemo(120, run.signal);
+          await waitForDemo(120, run.signal, { motion: false });
         }
         index = (index + 1) % panels.length;
       }
@@ -1185,12 +1019,6 @@
     }
   }
 
-  previewToggle.addEventListener('click', () => {
-    if (previewRunning) stopLivePreview({ manual: true });
-    else void startLivePreview();
-  });
-  document.getElementById('preview-replay').addEventListener('click', () => { void startLivePreview({ restart: true }); });
-
   /* ═══════════════════════════════════════════
      6. PRIVACY DATA FLOW PULSE
      ═══════════════════════════════════════════ */
@@ -1198,7 +1026,7 @@
   selectUnderstandMonth(4);
   void selectExploreQuestion(0, { animate: false });
   setWalkthroughStep(0, { animate: false });
-  updatePreviewControls();
+  updatePreviewState();
 
   if ('IntersectionObserver' in window) {
     const previewObserver = new IntersectionObserver(([entry]) => {

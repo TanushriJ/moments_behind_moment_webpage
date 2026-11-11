@@ -14,129 +14,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&amp;family=DM+Mono:wght@400;500&amp;family=Inter:wght@400;500;600&amp;display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261110_live_5">
-  <style>
-    /* ── Condensed How it works Flow (Guaranteed synchronization) ── */
-    .heroHowFlow {
-      background: var(--color-neutral-bg, #F7F7F5);
-      border: 1px solid var(--color-border, #E4E3DE);
-      border-radius: 20px;
-      padding: 16px 20px 18px;
-      display: flex !important;
-      flex-direction: column !important;
-      gap: 12px;
-      margin: 20px 0 24px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
-      width: 100%;
-      box-sizing: border-box;
-    }
-
-    .heroHowTopLabel {
-      font-family: var(--font-mono, monospace);
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--color-text-secondary, #6B6860);
-      text-align: left;
-      margin: 0;
-    }
-
-    .heroHowGrid {
-      display: grid !important;
-      grid-template-columns: 1fr 1.18fr 1fr !important;
-      align-items: stretch;
-      gap: 10px;
-      width: 100%;
-    }
-
-    .heroHowStep {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      text-align: center;
-      padding: 16px 10px;
-      border-radius: 14px;
-      min-width: 0;
-      transition: all 0.2s ease;
-    }
-
-    .heroHowIcon {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--color-text-secondary, #6B6860);
-      height: 26px;
-      width: 26px;
-      background: transparent !important;
-      border: none !important;
-      box-shadow: none !important;
-    }
-
-    .heroHowIcon svg {
-      display: block;
-    }
-
-    .heroHowStep.highlight {
-      background: rgba(45, 106, 79, 0.06) !important;
-      border: 1px solid rgba(45, 106, 79, 0.25) !important;
-      box-shadow: 0 2px 8px rgba(45, 106, 79, 0.04);
-      padding: 16px 12px;
-    }
-
-    .heroHowStep.highlight .heroHowIcon {
-      color: #2D6A4F !important;
-    }
-
-    .heroHowName {
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: 12.5px;
-      font-weight: 600;
-      color: var(--color-text, #1C1B18) !important;
-      line-height: 1.35;
-      white-space: nowrap;
-    }
-
-    .heroHowStep.highlight .heroHowName {
-      color: #1B4332 !important;
-    }
-
-    .heroHowSub {
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: 11px;
-      color: var(--color-text-secondary, #6B6860) !important;
-      line-height: 1.35;
-      white-space: nowrap;
-    }
-
-    .heroHowStep.highlight .heroHowSub {
-      color: #2D6A4F !important;
-      opacity: 0.95;
-    }
-
-    .heroHowFooter {
-      text-align: center;
-      font-family: var(--font-sans, system-ui, sans-serif);
-      font-size: 12px;
-      color: var(--color-text-secondary, #6B6860);
-      margin: 2px 0 0;
-      line-height: 1.4;
-    }
-
-    @media (max-width: 600px) {
-      .heroHowGrid {
-        grid-template-columns: 1fr !important;
-        gap: 8px;
-      }
-
-      .heroHowFlow {
-        padding: 14px;
-      }
-    }
-  </style>
-  <script src="./script.js?v=20261110_live_5" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=20261111_journey_pacing_12">
+  <script src="./script.js?v=20261111_journey_pacing_12" defer></script>
 </head>
 
 <body>
@@ -232,100 +111,30 @@
           </div>
         </div>
 
-        <!-- Hero figure with streamlined 5-month spending overview -->
-        <figure class="heroFigure" id="welcome-story">
+        <!-- A single, still conversation showing everyday spending in context. -->
+        <figure class="heroFigure heroChatFigure" id="welcome-story" aria-labelledby="hero-chat-question">
           <div class="figureHeader">
-            <span class="figureBadge">SPENDING OVERVIEW</span>
-            <span class="exampleTag" id="hero-tag-badge">EXAMPLE DATA</span>
+            <span class="figureBadge">EVERYDAY SPENDING</span>
+            <span class="exampleTag">EXAMPLE CHAT</span>
           </div>
-
-          <div class="heroPanel" id="hero-panel-insights">
-            <div class="figureTitle">
-              <div>
-                <p class="monthLabel" id="hero-month-label">SEPTEMBER / €2,530 SPENT</p>
-                <h2 id="hero-month-title">Your spending increased by €240 in September, groceries and recurring payments
-                  amount for the most of this increase.</h2>
+          <div class="heroConversation">
+            <div class="heroChatUser">
+              <span>You</span>
+              <p id="hero-chat-question">Where is my money going day to day?</p>
+            </div>
+            <div class="heroChatAnswer">
+              <div class="heroChatAuthor"><span class="heroChatAvatar" aria-hidden="true">✳</span><span>Moments Behind Money</span></div>
+              <div class="heroChatAnswerBody">
+                <p>Here’s where the everyday payments show up:</p>
+                <ul>
+                  <li>Groceries: Albert Heijn has passed <strong>€1,000</strong> in spending across your statements.</li>
+                  <li>Getting around: OV-Chipkaart journeys and Swapfiets.</li>
+                  <li>Recurring services: four subscriptions total <strong>€74.49 a month</strong>.</li>
+                </ul>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                aria-hidden="true">
-                <path d="M7 7h10v10" />
-                <path d="M7 17 17 7" />
-              </svg>
-            </div>
-
-            <div class="metrics" aria-live="polite">
-              <div><span>Money in</span><strong id="hero-money-in">€3,200</strong></div>
-              <div><span>Money out</span><strong id="hero-money-out">€2,530</strong></div>
-              <div><span>Left over</span><strong id="hero-money-left">€670</strong></div>
-            </div>
-
-            <svg class="chart" viewBox="0 0 500 215" role="img" aria-labelledby=":R14b:-title :R14b:-desc">
-              <title id=":R14b:-title">Example income and spending from July to November</title>
-              <desc id=":R14b:-desc">Income is €3,200 each month. Spending varies. September is highlighted. All figures
-                are fictional.</desc>
-              <!-- Soft Minimal Gridlines -->
-              <g class="chartGrid">
-                <line class="gridLine" x1="45" x2="480" y1="175" y2="175" />
-                <text class="axisLabel" x="38" y="179" text-anchor="end">€0</text>
-              </g>
-              <g class="chartGrid">
-                <line class="gridLine" x1="45" x2="480" y1="105" y2="105" />
-                <text class="axisLabel" x="38" y="109" text-anchor="end">2k</text>
-              </g>
-              <g class="chartGrid">
-                <line class="gridLine" x1="45" x2="480" y1="35" y2="35" />
-                <text class="axisLabel" x="38" y="39" text-anchor="end">4k</text>
-              </g>
-
-              <!-- 5 Balanced Months (Center Month = September Highlighted) -->
-              <!-- Month 0: July -->
-              <g class="monthCol" data-month-index="0" opacity="0.45" tabindex="0" role="button" aria-label="July data">
-                <rect x="76" y="63" width="16" height="112" rx="3.5" class="incomeBar" />
-                <rect x="96" y="91" width="16" height="84" rx="3.5" class="spendingBar" />
-                <text class="axisLabel" x="94" y="200" text-anchor="middle">Jul</text>
-              </g>
-
-              <!-- Month 1: August -->
-              <g class="monthCol" data-month-index="1" opacity="0.45" tabindex="0" role="button"
-                aria-label="August data">
-                <rect x="164" y="63" width="16" height="112" rx="3.5" class="incomeBar" />
-                <rect x="184" y="95" width="16" height="80" rx="3.5" class="spendingBar" />
-                <text class="axisLabel" x="182" y="200" text-anchor="middle">Aug</text>
-              </g>
-
-              <!-- Month 2: September (Center & Highlighted Focus) -->
-              <g class="monthCol active" data-month-index="2" opacity="1" tabindex="0" role="button"
-                aria-label="September data">
-                <rect x="237" y="16" width="66" height="190" rx="8" class="chartHighlight" />
-                <rect x="252" y="63" width="16" height="112" rx="3.5" class="incomeBar" />
-                <rect x="272" y="86" width="16" height="89" rx="3.5" class="spendingBar" />
-                <text class="axisLabel monthActiveLabel" x="270" y="200" text-anchor="middle">Sep</text>
-              </g>
-
-              <!-- Month 3: October -->
-              <g class="monthCol" data-month-index="3" opacity="0.45" tabindex="0" role="button"
-                aria-label="October data">
-                <rect x="340" y="63" width="16" height="112" rx="3.5" class="incomeBar" />
-                <rect x="360" y="93" width="16" height="82" rx="3.5" class="spendingBar" />
-                <text class="axisLabel" x="358" y="200" text-anchor="middle">Oct</text>
-              </g>
-
-              <!-- Month 4: November -->
-              <g class="monthCol" data-month-index="4" opacity="0.45" tabindex="0" role="button"
-                aria-label="November data">
-                <rect x="428" y="63" width="16" height="112" rx="3.5" class="incomeBar" />
-                <rect x="448" y="75" width="16" height="100" rx="3.5" class="spendingBar" />
-                <text class="axisLabel" x="446" y="200" text-anchor="middle">Nov</text>
-              </g>
-            </svg>
-
-            <div class="chartLegend">
-              <span><i class="incomeKey"></i>Income</span>
-              <span><i class="spendingKey"></i>Spending</span>
-              <span>EUR / MONTH</span>
             </div>
           </div>
+          <figcaption class="heroChatExplanation">See everyday payments grouped into patterns, so you can understand where your money goes.</figcaption>
         </figure>
       </section>
 
@@ -335,14 +144,10 @@
         <span id="welcome-demo" class="anchorAlias" aria-hidden="true"></span>
         <p class="eyebrow">01 / SEE IT IN PRACTICE</p>
         <div class="sectionIntro">
-          <h2 id="welcome-demo-title">Upload. Understand. Explore. <em>Your money, with a little context.</em></h2>
+          <h2 id="welcome-demo-title">From your first upload <em>to a clearer picture.</em></h2>
         </div>
         <div class="previewToolbar">
           <div class="previewLiveLabel"><span class="previewLiveDot" aria-hidden="true"></span><span id="preview-status">LIVE PREVIEW · Watch a statement become a story</span></div>
-          <div class="previewControls">
-            <button id="preview-toggle" type="button" aria-label="Pause live preview">Ⅱ <span>Pause</span></button>
-            <button id="preview-replay" type="button" aria-label="Replay the walkthrough">↻ <span>Replay</span></button>
-          </div>
         </div>
 
         <!-- Walkthrough Stepper -->
@@ -352,7 +157,7 @@
             <span class="stepBadge">01</span>
             <div class="stepMeta">
               <strong>Upload</strong>
-              <span>Drop a statement</span>
+              <span>Drop a CSV statement</span>
             </div>
             <div class="stepTrack">
               <div class="stepFill"></div>
@@ -383,7 +188,6 @@
         </div>
 
         <!-- Walkthrough Container -->
-        <p class="walkthroughDatasetNote">Try the journey with six months of fictional transactions · January–June 2026</p>
         <div class="walkthroughContainer">
           <!-- Panel 0: Upload -->
           <div class="walkthroughPanel active" id="panel-upload" role="tabpanel" aria-labelledby="step-upload">
@@ -439,7 +243,6 @@
                     42 transactions extracted
                   </div>
                 </div>
-                <p class="uploadCaption">Drop a CSV bank statement. Your statements stay on your computer.</p>
               </div>
 
               <div class="uploadExtractedList">
@@ -499,9 +302,7 @@
                 <div class="understandLegendLeft">
                   <span><i class="incomeKey"></i>Income</span>
                   <span><i class="spendingKey"></i>Spending</span>
-                  <span class="understandHint">Click a bar or month to see your story</span>
                 </div>
-                <span class="understandLegendBank" title="Demo Bank Data" aria-hidden="true">🏛️</span>
               </div>
 
               <!-- SVG Line Chart (Cumulative & Monthly switchable) -->
@@ -642,8 +443,8 @@
 
               <!-- Your Story Section (timeline of monthly memories & insights) -->
               <div class="understandStory" id="understand-story">
-                <h3 class="understandStoryTitle">Your story</h3><p class="storyIntro">Click a month to see your story.</p>
-                <p class="insightWaiting" id="insight-waiting" hidden>Each month has a story.<br>Click a point to see the insight.</p>
+                <h3 class="understandStoryTitle">Your story</h3>
+                <div id="insight-waiting" aria-hidden="true" hidden></div>
                 <div class="understandTimeline" id="understand-timeline">
                   <div class="understandChapter" data-chapter="0" hidden>
                     <div class="chapterDot"></div>
@@ -777,7 +578,7 @@
 
                 <div class="understandCtaWrap">
                   <button class="stepNextBtn" type="button" data-next-step="2">
-                    Step 03: Explore questions with AI
+                    Step 03: Explore your questions
                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                       aria-hidden="true">
@@ -872,62 +673,37 @@
             </div>
           </div>
 
-          <!-- Educational element: Stays with your computer -->
-          <div class="localDataCard reveal" id="local-data-education">
-            <div class="localDataIcon" aria-hidden="true">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect width="18" height="12" x="3" y="4" rx="2" ry="2" />
-                <line x1="2" x2="22" y1="20" y2="20" />
-              </svg>
+          <div class="privacyVisual" role="group" aria-labelledby="privacy-shield-title">
+            <div class="privacyVisualHeader">
+              <div><h3 id="privacy-shield-title">The Privacy Shield, in detail.</h3><p>Mask accounts. Alias merchants. Scale amounts.</p></div>
+              <span class="privacyScaleTag">EXAMPLE · 2× SCALE</span>
             </div>
-            <div class="localDataContent">
-              <div class="localDataHeader">
-                <span class="localDataBadge">ON YOUR COMPUTER</span>
-                <h3>Your statements stay on your computer</h3>
+            <div class="privacySplit">
+              <div class="privacyCol privacyColUser">
+                <div class="privacyColHeader"><span class="privacyViewDot" aria-hidden="true"></span><span>WHAT YOU SEE · ORIGINAL DETAILS</span></div>
+                <dl>
+                  <div><dt>Account</dt><dd>NL91 ABNA 0417 1643 00</dd></div>
+                  <div><dt>Merchant</dt><dd>Albert Heijn Overtoom</dd></div>
+                  <div><dt>Amount</dt><dd>€87.50</dd></div>
+                  <div><dt>Category</dt><dd>Food &amp; Groceries</dd></div>
+                </dl>
               </div>
-              <p>When you drop in a bank statement, your files stay on your computer. When you ask a question, only a
-                disguised, scaled version is sent to help process the answer, and it turns back into your real numbers
-                right on your screen.</p>
-              <div class="localDataHighlights">
-                <div class="localDataPillar">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      aria-hidden="true">
-                      <path d="M20 6 9 17l-5-5" />
-                    </svg>
-                    On your computer
-                  </span>
-                  <p>Your statement files stay on your machine, not on our servers.</p>
-                </div>
-                <div class="localDataPillar">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      aria-hidden="true">
-                      <path
-                        d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
-                      <path d="m9 12 2 2 4-4" />
-                    </svg>
-                    Filtered for answers
-                  </span>
-                  <p>Only a disguised, scaled snippet is sent when you ask to process a question.</p>
-                </div>
-                <div class="localDataPillar">
-                  <span>
-                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
-                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                      aria-hidden="true">
-                      <path d="m2 14 6-6 4 4 6-6" />
-                      <path d="M16 4h4v4" />
-                    </svg>
-                    Decoded on your screen
-                  </span>
-                  <p>Answers are decoded on your screen, so real amounts are only shown to you.</p>
-                </div>
+              <div class="privacyDivider">
+                <div class="privacyShield"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg></div>
+                <span class="privacyShieldName">PRIVACY<br>SHIELD</span>
+                <span class="privacyShieldArrow" aria-hidden="true">→</span>
+              </div>
+              <div class="privacyCol privacyColAI">
+                <div class="privacyColHeader"><span class="privacyViewDot" aria-hidden="true"></span><span>WHAT THE AI RECEIVES · SHIELDED</span></div>
+                <dl>
+                  <div><dt>Account</dt><dd><span class="privacyValue">IBAN••4300</span><span class="privacyMaskTag">MASKED</span></dd></div>
+                  <div><dt>Merchant</dt><dd><span class="privacyValue">Merchant_1</span><span class="privacyMaskTag">ALIASED</span></dd></div>
+                  <div><dt>Amount</dt><dd><span class="privacyValue">€175.00</span><span class="privacyMaskTag">2× SCALED</span></dd></div>
+                  <div><dt>Category</dt><dd><span class="privacyValue">Food &amp; Groceries</span><span class="privacyMaskTag is-unchanged">UNCHANGED</span></dd></div>
+                </dl>
               </div>
             </div>
+            <p class="privacyDecodeNote"><span aria-hidden="true">↩</span> The answer is translated back, so you see your real merchant names and amounts.</p>
           </div>
 
           <!-- Data flow visualization -->
@@ -941,8 +717,8 @@
                   <line x1="2" x2="22" y1="20" y2="20" />
                 </svg>
               </div>
-              <span>Your Computer</span>
-              <small>stays with you</small>
+              <span>Your statement</span>
+              <small>original file</small>
             </div>
             <div class="dataFlowLine" aria-hidden="true"></div>
             <div class="dataFlowStep highlight">
@@ -990,9 +766,9 @@
           <!-- Privacy steps -->
           <div class="privacySteps reveal">
             <article>
-              <span>01 / ON YOUR COMPUTER</span>
-              <h3>Stays on your computer.</h3>
-              <p>Your statement files stay on your machine. Nothing is saved to external servers.</p>
+              <span>01 / YOUR STATEMENTS</span>
+              <h3>Your statements stay on your computer.</h3>
+              <p>Your original files and the details needed to restore your answers stay here. Only the masked, scaled snippet needed for your question is sent for analysis.</p>
             </article>
             <article>
               <span>02 / SHIELDED QUERIES</span>
