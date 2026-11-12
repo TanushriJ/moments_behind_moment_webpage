@@ -381,26 +381,60 @@ button, input { font: inherit; }
   box-sizing: border-box;
 }
 
-/* A still conversation keeps the hero focused on one everyday question. */
-.heroChatFigure { padding: 24px 26px; }
-.heroConversation { display: flex; flex-direction: column; gap: 24px; padding-top: 12px; }
+/* Match the left column through its actions, with scrolling available for smaller screens. */
+.heroChatSlot { position: relative; align-self: stretch; min-width: 0; }
+.heroChatStage { position: absolute; inset: 0; display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.heroChatFigure { display: flex; flex-direction: column; flex: 1; height: auto; padding: 22px 24px; }
+.heroConversation { display: flex; flex-direction: column; gap: 12px; flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #c5d1c3 transparent; scrollbar-gutter: stable; padding: 6px 6px 6px 0; border-radius: 4px; }
+.heroConversation:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+.heroConversation > * { flex-shrink: 0; }
 .heroChatUser { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
 .heroChatUser > span { font-size: 10px; color: var(--color-text-secondary)!important; padding-right: 3px; }
-.heroChatUser p { max-width: 94%; padding: 13px 16px; border-radius: 14px 14px 3px 14px; background: #eaf1e7; color: #244334!important; font-size: 14px; line-height: 1.6; }
-.heroChatAuthor { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 11px; font-weight: 500; color: var(--color-accent); }
-.heroChatAvatar { display: inline-grid; place-items: center; width: 27px; height: 27px; border-radius: 50%; background: #eaf1e7; color: var(--color-accent)!important; font-size: 21px; font-weight: 400; }
-.heroChatAnswerBody { padding: 16px 18px; background: #f8faf6; border: 1px solid #e0e8da; border-radius: 3px 14px 14px 14px; font-size: 13px; line-height: 1.8; color: var(--color-text-body); }
-.heroChatAnswerBody ul { margin: 12px 0 0; padding-left: 18px; }
-.heroChatAnswerBody li { padding-left: 3px; margin-top: 10px; }
-.heroChatAnswerBody li::marker { color: var(--color-accent); font-size: 10px; }
+.heroChatUser p { max-width: 100%; padding: 10px 12px; border-radius: 14px 14px 3px 14px; background: #eaf1e7; color: #244334!important; font-size: 11.5px; line-height: 1.6; }
+.heroChatQuestionText { display: inline-block; }
+.heroChatAnswer { display: grid; gap: 10px; }
+.heroChatIntro, .heroChatReply { font-size: 11.5px; line-height: 1.65; color: var(--color-text-body); }
+.heroChatIntro strong, .heroChatReply strong { font-weight: 600; color: var(--color-text); }
+.heroChatAvatar { display: inline-grid; place-items: center; vertical-align: middle; width: 20px; height: 20px; margin-right: 6px; border-radius: 50%; background: #eaf1e7; color: var(--color-accent)!important; font-size: 17px; font-weight: 400; }
+.heroChatAnswerBody { padding: 12px 14px; background: #f8faf6; border: 1px solid #e0e8da; border-radius: 3px 14px 14px 14px; font-size: 11.5px; line-height: 1.65; color: var(--color-text-body); }
 .heroChatAnswerBody strong { color: var(--color-text); font-weight: 600; }
-.heroChatExplanation { margin-top: 24px; padding-top: 17px; border-top: 1px solid var(--color-border); color: var(--color-text-secondary); font-size: 12px; line-height: 1.8; }
+.heroCostBreakdown { margin: 10px 0 0; }
+.heroChatAnswerBody > .heroCostBreakdown:first-child { margin-top: 0; }
+.heroChatAnswerBody > .heroCostBreakdown:first-child > div:first-child { border-top: 0; padding-top: 0; }
+.heroCostBreakdown > div { padding: 7px 0; border-top: 1px solid #e0e8da; }
+.heroCostBreakdown dt { display: flex; justify-content: space-between; gap: 12px; font-weight: 500; }
+.heroCostBreakdown dt strong { white-space: nowrap; }
+.heroCostBreakdown dd { margin: 3px 0 0; font-size: 10.5px; line-height: 1.65; color: var(--color-text-secondary); }
+.heroCostChart { margin-top: 10px; padding-top: 10px; border-top: 1px solid #e0e8da; }
+.heroCostChart > p { font-size: 10.5px; font-weight: 500; }
+.heroCostColumns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding-top: 26px; }
+.heroCostColumn { min-width: 0; text-align: center; }
+.heroCostTrack { height: 80px; display: flex; align-items: flex-end; justify-content: center; border-bottom: 1px solid #d7dfd0; }
+.heroCostBar { position: relative; width: 44px; max-width: 65%; border-radius: 4px 4px 0 0; }
+.heroCostBar.fixed { background: var(--color-accent); }
+.heroCostBar.variable { background: #91a68b; }
+.heroCostBar.purchase { background: var(--color-clay); }
+.heroCostBar strong { position: absolute; top: -22px; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 10px var(--font-mono); }
+.heroCostColumn > span { display: block; padding-top: 8px; font-size: 10px; line-height: 1.5; color: var(--color-text-secondary); }
+.heroFollowups { display: flex; flex-wrap: wrap; flex-shrink: 0; gap: 6px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--color-border); }
+.heroFollowups button { border: 1px solid #dce5d6; border-radius: 20px; padding: 7px 9px; background: #f8faf6; color: var(--color-accent); font: 10px/1.4 var(--font-sans); cursor: pointer; }
+.heroFollowups button:hover, .heroFollowups button[aria-pressed="true"] { background: #eaf1e7; border-color: #a7bda7; }
+.heroFollowups button:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 3px; }
+.heroFollowupExchange { display: flex; flex-direction: column; gap: 12px; }
+.heroFollowupExchange[hidden] { display: none; }
+.heroFollowupExchange .heroChatUser p { margin-left: auto; }
+.heroChatReply > * + * { margin-top: 10px; }
+.heroChatReply > .heroCostBreakdown { padding: 10px 12px; border: 1px solid #e0e8da; border-radius: 8px; background: #f8faf6; }
+.heroChatReply > .heroCostBreakdown > div:first-child { padding-top: 0; border-top: 0; }
+@media (max-width: 800px) {
+  .heroChatStage { position: static; }
+  .heroChatFigure { flex: none; }
+  .heroConversation { flex: none; max-height: 620px; }
+}
 @media (max-width: 600px) {
   .heroChatFigure { padding: 20px 18px; }
-  .heroConversation { gap: 20px; }
-  .heroChatUser p { font-size: 13px; padding: 12px 14px; max-width: 100%; }
-  .heroChatAnswerBody { padding: 14px; font-size: 12px; }
-  .heroChatExplanation { margin-top: 20px; font-size: 11px; }
+  .heroChatUser p { font-size: 11.5px; }
+  .heroChatAnswerBody { padding: 12px; }
 }
 
 /* Chat Demo panel inside Hero */
@@ -2814,3 +2848,24 @@ button, input { font: inherit; }
   .chatMockContent { font-size: 12px; }
   .chatComposerStatus { font-size: 8px; margin-top: 5px!important; }
 }
+
+/* Use the same Lora family as Your story throughout the conversations. */
+.heroConversation, .heroFollowups, .chatMockThread { font-family: var(--font-story); }
+.heroChatUser p, .heroChatIntro, .heroChatReply, .heroChatAnswerBody,
+.chatMockBubble, .chatMockContent { font-family: var(--font-story); font-size: 14px; line-height: 1.8; }
+.heroCostBreakdown dd { font-size: 12.5px; line-height: 1.75; }
+.heroCostChart > p, .heroCostColumn > span { font-size: 12px; }
+.heroCostBar strong { font: 500 12px var(--font-story); }
+.heroFollowups button { font: 12px/1.5 var(--font-story); }
+.chatMockSessionTitle { font: 400 14px/1.6 var(--font-story); }
+.chatMockInputWrap input { font: 14px/1.6 var(--font-story); }
+.chatMockLabel, .chatMockContent .exploreDataRow, .chatMockContent .exploreHighlightBox { font-size: 13px; }
+.chatMockContent .exploreDataRow > div > strong,
+.chatMockContent .exploreDataRow > strong,
+.chatMockContent .exploreDataBadges span { font-family: var(--font-story); }
+.chatMockContent .exploreDataBadges span { font-size: 11px; }
+.chatMockChartTitle { font: 500 13px/1.6 var(--font-story); }
+.chatBarCaption, .chatColumn > span, .pieLegendName { font-family: var(--font-story); font-size: 12px; }
+.chatBarCaption strong, .chatColumnFill strong, .pieLegendVal, .pieCenterTotal, .pieCenterSub { font-family: var(--font-story); }
+.chatColumnFill strong { font-size: 12px; }
+.chatMockChart .chartToggleBtn { font-family: var(--font-story); font-size: 12px; }

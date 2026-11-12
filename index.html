@@ -14,8 +14,8 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400&amp;family=DM+Mono:wght@400;500&amp;family=Inter:wght@400;500;600&amp;display=swap"
     rel="stylesheet">
-  <link rel="stylesheet" href="./styles.css?v=20261111_journey_pacing_12">
-  <script src="./script.js?v=20261111_journey_pacing_12" defer></script>
+  <link rel="stylesheet" href="./styles.css?v=20261112_story_type_17">
+  <script src="./script.js?v=20261112_story_type_17" defer></script>
 </head>
 
 <body>
@@ -31,7 +31,7 @@
         <a href="#welcome-privacy">Privacy</a>
         <a href="#join">Waitlist</a>
       </nav>
-      <a class="headerButton" href="#join">Try it now
+      <a class="headerButton" href="https://tanuushri-moments-behind-money.hf.space/" target="_blank" rel="noopener noreferrer">Try it now
         <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
           stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
           <path d="M5 12h14" />
@@ -99,7 +99,7 @@
           </div>
 
           <div class="heroActions">
-            <a class="primaryButton" href="#join">Try it now
+            <a class="primaryButton" href="https://tanuushri-moments-behind-money.hf.space/" target="_blank" rel="noopener noreferrer">Try it now
               <svg xmlns="http://www.w3.org/2000/svg" width="17" height="17" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
                 aria-hidden="true">
@@ -111,31 +111,52 @@
           </div>
         </div>
 
-        <!-- A single, still conversation showing everyday spending in context. -->
+        <!-- One example conversation, with its breakdown inside a scrollable thread. -->
+        <div class="heroChatSlot">
+        <div class="heroChatStage">
         <figure class="heroFigure heroChatFigure" id="welcome-story" aria-labelledby="hero-chat-question">
-          <div class="figureHeader">
-            <span class="figureBadge">EVERYDAY SPENDING</span>
-            <span class="exampleTag">EXAMPLE CHAT</span>
-          </div>
-          <div class="heroConversation">
+          <div class="heroConversation" tabindex="0" role="region" aria-label="Example spending conversation">
             <div class="heroChatUser">
               <span>You</span>
-              <p id="hero-chat-question">Where is my money going day to day?</p>
+              <p id="hero-chat-question"><span class="heroChatQuestionText">Why did I spend more this month?</span></p>
             </div>
             <div class="heroChatAnswer">
-              <div class="heroChatAuthor"><span class="heroChatAvatar" aria-hidden="true">✳</span><span>Moments Behind Money</span></div>
+              <p class="heroChatIntro"><span class="heroChatAvatar" aria-hidden="true">✳</span>You spent <strong>€1,390 more than last month</strong>. The couch explains <strong>90% of the increase</strong>. Separating regular costs from one-off purchases helps you see what changed.</p>
               <div class="heroChatAnswerBody">
-                <p>Here’s where the everyday payments show up:</p>
-                <ul>
-                  <li>Groceries: Albert Heijn has passed <strong>€1,000</strong> in spending across your statements.</li>
-                  <li>Getting around: OV-Chipkaart journeys and Swapfiets.</li>
-                  <li>Recurring services: four subscriptions total <strong>€74.49 a month</strong>.</li>
-                </ul>
+                <dl class="heroCostBreakdown">
+                  <div>
+                    <dt>Fixed costs <strong>€1,174.49</strong></dt>
+                    <dd>Rent €900 · Utilities €200 · Subscriptions €74.49</dd>
+                  </div>
+                  <div>
+                    <dt>Variable costs <strong>€650</strong></dt>
+                    <dd>Groceries €350 · Transport €120 · Eating out €180</dd>
+                  </div>
+                  <div>
+                    <dt>One-off purchase <strong>€1,250</strong></dt>
+                    <dd>A new couch from HAY Amsterdam.</dd>
+                  </div>
+                </dl>
+                <div class="heroCostChart" role="group" aria-labelledby="hero-cost-chart-title">
+                  <p id="hero-cost-chart-title">What increased from last month</p>
+                  <div class="heroCostColumns">
+                    <div class="heroCostColumn"><div class="heroCostTrack"><div class="heroCostBar fixed" style="height:3.2%"><strong>+€40</strong></div></div><span>Fixed costs</span></div>
+                    <div class="heroCostColumn"><div class="heroCostTrack"><div class="heroCostBar variable" style="height:8%"><strong>+€100</strong></div></div><span>Variable costs</span></div>
+                    <div class="heroCostColumn"><div class="heroCostTrack"><div class="heroCostBar purchase" style="height:100%"><strong>+€1,250</strong></div></div><span>New couch</span></div>
+                  </div>
+                </div>
               </div>
             </div>
+            <div class="heroFollowupExchange" id="hero-followup-exchange" aria-live="polite" hidden></div>
           </div>
-          <figcaption class="heroChatExplanation">See everyday payments grouped into patterns, so you can understand where your money goes.</figcaption>
+          <div class="heroFollowups" role="group" aria-label="Follow-up questions">
+            <button type="button" data-hero-followup="changed" aria-controls="hero-followup-exchange" aria-pressed="false">What changed?</button>
+            <button type="button" data-hero-followup="bills" aria-controls="hero-followup-exchange" aria-pressed="false">Which bills went up?</button>
+            <button type="button" data-hero-followup="everyday" aria-controls="hero-followup-exchange" aria-pressed="false">What about everyday costs?</button>
+          </div>
         </figure>
+        </div>
+        </div>
       </section>
 
 
@@ -623,12 +644,12 @@
                     <span aria-hidden="true">✳</span><h4>What would you like to understand?</h4><p>Choose a sample question to explore six months of transactions.</p>
                   </div>
                   <div class="chatMockMsg user" id="demo-user-row"><p class="chatMockBubble" id="demo-user-msg">What subscriptions am I currently paying for?</p></div>
-                  <div class="chatMockMsg assistant" id="demo-loading" role="status" aria-label="Finding patterns in the demo transactions" hidden>
-                    <div class="chatMockLabel"><span class="chatAppAvatar" aria-hidden="true">✳</span><span>Finding the moments behind your money…</span></div>
+                  <div class="chatMockMsg assistant" id="demo-loading" role="status" aria-label="Finding a response" hidden>
+                    <div class="chatMockLabel"><span class="chatAppAvatar" aria-hidden="true">✳</span><span>Finding a response…</span></div>
                     <div class="typingDots" aria-hidden="true"><span></span><span></span><span></span></div>
                   </div>
                   <div class="chatMockMsg assistant" id="explore-answer" role="region" aria-label="Demo chat answer">
-                    <div class="chatMockLabel"><span class="chatAppAvatar" aria-hidden="true">✳</span><span>Moments Behind Money</span><span class="chatAnswerTag">DEMO ANSWER</span></div>
+                    <div class="chatMockLabel"><span class="chatAppAvatar" aria-hidden="true">✳</span></div>
                     <div class="chatMockContent exploreAnswerBody" id="explore-answer-body">
                       <p>You have <strong>4 active recurring services</strong> totaling <strong>€74.49/month</strong>: Fitness Club €35.00, Swapfiets €19.50, Spotify €10.00, and iCloud+ €9.99.</p>
                     </div>

@@ -10,6 +10,157 @@
   const money = (value) => euro.format(value);
   const isReducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  function createReadingScroll(element, speed = 28) {
+    let frame = 0;
+    let lastTime = 0;
+    let startTime = 0;
+    let target = 0;
+    let position = 0;
+    let paused = false;
+    let waiting = [];
+    const cancel = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+      lastTime = 0;
+      waiting.splice(0).forEach((resolve) => resolve());
+    };
+    const tick = (time) => {
+      frame = 0;
+      if (paused || document.hidden) { cancel(); return; }
+      if (time < startTime) { frame = requestAnimationFrame(tick); return; }
+      const maximum = Math.max(0, element.scrollHeight - element.clientHeight);
+      const destination = Math.min(target, maximum);
+      const distance = destination - position;
+      if (Math.abs(distance) <= 1 || isReducedMotion()) {
+        element.scrollTop = destination;
+        cancel();
+        return;
+      }
+      const delta = lastTime ? Math.min(time - lastTime, 50) : 16;
+      lastTime = time;
+      position += Math.sign(distance) * Math.min(Math.abs(distance), speed * delta / 1000);
+      element.scrollTop = position;
+      frame = requestAnimationFrame(tick);
+    };
+    const pause = () => { paused = true; cancel(); };
+    element.addEventListener('wheel', pause, { passive: true });
+    element.addEventListener('touchstart', pause, { passive: true });
+    element.addEventListener('pointerdown', pause, { passive: true });
+    element.addEventListener('keydown', (event) => {
+      if (['ArrowUp', 'ArrowDown', 'PageUp', 'PageDown', 'Home', 'End', ' '].includes(event.key)) pause();
+    });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) cancel(); });
+    return {
+      follow(delay = 0) {
+        if (paused) return;
+        target = Math.max(0, element.scrollHeight - element.clientHeight);
+        if (!frame) {
+          position = element.scrollTop;
+          startTime = performance.now() + delay;
+          lastTime = 0;
+          frame = requestAnimationFrame(tick);
+        }
+      },
+      reset() { cancel(); paused = false; },
+      cancel,
+      finished() { return frame ? new Promise((resolve) => waiting.push(resolve)) : Promise.resolve(); }
+    };
+  }
+
+  // Introduce the hero once and give larger story text a slow reading scroll.
+  const heroChat = document.querySelector('.heroChatFigure');
+  const heroThread = document.querySelector('.heroConversation');
+  const heroQuestionText = document.querySelector('.heroChatQuestionText');
+  const heroAnswer = document.querySelector('.heroChatAnswer');
+  const heroReadingScroll = heroThread ? createReadingScroll(heroThread, 24) : null;
+  let finishHeroIntroduction = () => {};
+  if (heroChat && heroThread && heroQuestionText && heroAnswer && heroQuestionText.animate && !isReducedMotion()) {
+    let heroStarted = false;
+    let heroObserver;
+    let heroAnimation;
+    heroChat.dataset.chatPhase = 'waiting';
+    heroQuestionText.style.visibility = 'hidden';
+    heroAnswer.style.visibility = 'hidden';
+    const settleHeroChat = () => {
+      heroStarted = true;
+      heroObserver?.disconnect();
+      heroAnimation?.cancel();
+      heroQuestionText.style.visibility = '';
+      heroAnswer.style.visibility = '';
+      heroChat.dataset.chatPhase = 'ready';
+    };
+    finishHeroIntroduction = settleHeroChat;
+    const introduceHeroChat = async () => {
+      if (heroStarted) return;
+      heroStarted = true;
+      heroObserver?.disconnect();
+      if (isReducedMotion()) { settleHeroChat(); return; }
+      heroChat.dataset.chatPhase = 'typing';
+      heroQuestionText.style.visibility = '';
+      try {
+        heroAnimation = heroQuestionText.animate([
+          { clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }
+        ], { duration: 1500, easing: 'steps(32, end)' });
+        await heroAnimation.finished;
+        heroAnswer.style.visibility = '';
+        heroChat.dataset.chatPhase = 'answering';
+        heroAnimation = heroAnswer.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 900, easing: 'ease-out' });
+        await heroAnimation.finished;
+        settleHeroChat();
+        heroReadingScroll?.follow(4000);
+      } catch {
+        settleHeroChat();
+      }
+    };
+    heroThread.addEventListener('wheel', settleHeroChat, { once: true, passive: true });
+    heroThread.addEventListener('touchstart', settleHeroChat, { once: true, passive: true });
+    heroThread.addEventListener('focus', settleHeroChat, { once: true });
+    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener('change', (event) => {
+      if (event.matches) settleHeroChat();
+    });
+    if ('IntersectionObserver' in window) {
+      heroObserver = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) void introduceHeroChat();
+      }, { threshold: .25 });
+      heroObserver.observe(heroChat);
+    } else {
+      void introduceHeroChat();
+    }
+  }
+
+  const heroFollowupAnswers = {
+    changed: `<p>You spent <strong>€3,074.49 this month</strong>, compared with <strong>€1,684.49 last month</strong>.</p>
+      <dl class="heroCostBreakdown">
+        <div><dt>Fixed costs <strong>+€40</strong></dt></div>
+        <div><dt>Variable costs <strong>+€100</strong></dt></div>
+        <div><dt>New couch <strong>+€1,250</strong></dt></div>
+      </dl><p>That adds up to the <strong>€1,390 increase</strong>. The couch is a one-off purchase.</p>`,
+    bills: `<p><strong>Utilities rose by €40</strong>, from €160 to €200.</p>
+      <p>Rent stayed at <strong>€900</strong> and subscriptions at <strong>€74.49</strong>. Together, your fixed costs came to <strong>€1,174.49</strong>.</p>`,
+    everyday: `<p>Your variable costs rose by <strong>€100</strong>, from €550 to <strong>€650</strong>.</p>
+      <dl class="heroCostBreakdown">
+        <div><dt>Groceries <strong>€350</strong></dt></div>
+        <div><dt>Transport <strong>€120</strong></dt></div>
+        <div><dt>Eating out <strong>€180</strong></dt></div>
+      </dl><p>The couch is counted separately as a one-off purchase.</p>`
+  };
+  const heroFollowupButtons = Array.from(document.querySelectorAll('[data-hero-followup]'));
+  const heroFollowupExchange = document.getElementById('hero-followup-exchange');
+  heroFollowupButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      const answer = heroFollowupAnswers[button.dataset.heroFollowup];
+      if (!answer || !heroFollowupExchange || !heroThread) return;
+      finishHeroIntroduction();
+      heroFollowupButtons.forEach((item) => item.setAttribute('aria-pressed', String(item === button)));
+      heroFollowupExchange.innerHTML = `<div class="heroChatUser"><p>${button.textContent}</p></div>
+        <div class="heroChatReply">${answer.replace('<p>', '<p><span class="heroChatAvatar" aria-hidden="true">✳</span>')}</div>`;
+      heroFollowupExchange.hidden = false;
+      heroReadingScroll?.reset();
+      if (isReducedMotion()) heroThread.scrollTop = heroThread.scrollHeight;
+      else heroReadingScroll?.follow(800);
+    });
+  });
+
   // Reveal the supporting sections when they enter the viewport.
   const revealElements = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window) {
@@ -578,6 +729,7 @@
   const exploreAnswerQEl = document.getElementById('demo-user-msg');
   const exploreAnswerBodyEl = document.getElementById('explore-answer-body');
   const chatThread = document.getElementById('chat-demo-thread');
+  const exploreReadingScroll = createReadingScroll(chatThread);
   const chatUserRow = document.getElementById('demo-user-row');
   const chatEmptyState = document.getElementById('chat-empty-state');
   const chatStatus = document.getElementById('demo-chat-status');
@@ -661,6 +813,7 @@
     chatLoading.hidden = true;
     chatChart.hidden = true;
     chatThread.scrollTop = 0;
+    exploreReadingScroll.reset();
     const live = animate && !isReducedMotion();
     chatThread.setAttribute('aria-busy', String(live));
     try {
@@ -677,7 +830,7 @@
         animatePreview(chatUserRow, [{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }], 250);
         panels[2].dataset.phase = 'thinking';
         chatLoading.hidden = false;
-        chatStatus.textContent = 'Finding patterns in six months of transactions…';
+        chatStatus.textContent = 'Finding a response…';
         await waitForDemo(650, signal);
       }
       chatLoading.hidden = true;
@@ -700,7 +853,10 @@
       }
       panels[2].dataset.phase = 'ready';
       chatStatus.textContent = 'Answer ready · January–June 2026.';
-      if (live) followDemoChat();
+      if (live) {
+        followDemoChat();
+        await exploreReadingScroll.finished();
+      }
       else chatThread.scrollTop = 0;
     } catch (error) {
       if (error.name !== 'AbortError') throw error;
@@ -788,6 +944,7 @@
     panelRun = null;
     panelAnimations.forEach((animation) => animation.cancel());
     panelAnimations.clear();
+    exploreReadingScroll?.cancel();
     document.getElementById('chat-demo-thread')?.setAttribute('aria-busy', 'false');
     const cursor = document.getElementById('preview-chart-cursor');
     if (cursor) { cursor.hidden = true; cursor.classList.remove('is-clicking'); }
@@ -813,12 +970,11 @@
       if (node.textContent.trim()) nodes.push([node, node.textContent]);
     }
     nodes.forEach(([node]) => { node.textContent = ''; });
-    for (const [node, text] of nodes) await typeDemoText(node, text, signal, 7, 12);
+    for (const [node, text] of nodes) await typeDemoText(node, text, signal, 3, 60);
   }
 
   function followDemoChat() {
-    chatThread.scrollTo({ top: chatThread.scrollHeight,
-      behavior: isReducedMotion() ? 'instant' : 'smooth' });
+    exploreReadingScroll.follow(800);
   }
 
   async function streamDemoAnswer(signal) {
@@ -833,14 +989,14 @@
         const rows = Array.from(block.children);
         rows.forEach((row) => { row.hidden = true; });
         for (const row of rows) {
-          await waitForDemo(130, signal);
+          await waitForDemo(500, signal);
           row.hidden = false;
           animatePreview(row, [{ opacity: 0, transform: 'translateY(4px)' }, { opacity: 1, transform: 'translateY(0)' }], 250);
           followDemoChat();
         }
       }
       followDemoChat();
-      await waitForDemo(80, signal);
+      await waitForDemo(350, signal);
     }
   }
 
